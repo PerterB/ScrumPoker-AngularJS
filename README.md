@@ -28,3 +28,14 @@ Team Members
 ------------
 Open http://localhost:3000/vote/{planningRoom}
 
+Running Unit Tests
+------------------
+Unit Tests are run with karma
+
+    npm install -g karma
+
+From the public/scripts directory run
+
+    ./test.sh
+
+
