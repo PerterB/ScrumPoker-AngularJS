@@ -12,10 +12,6 @@ module.exports = function(config){
             'test/**/*.js'
         ],
 
-        exclude : [
-            'app/client.js'
-        ],
-
         preprocessors: {
             'app/**/*.js': 'coverage'
         },

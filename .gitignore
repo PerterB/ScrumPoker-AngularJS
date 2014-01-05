@@ -1,3 +1,4 @@
 
 .idea/
 public/coverage/
+server/node_modules
