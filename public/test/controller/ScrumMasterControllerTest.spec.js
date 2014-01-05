@@ -8,7 +8,7 @@ App.loggedInUsers = [];
 
 
 
-describe('ClientController Tests', function() {
+describe('ScrumMasterController Tests', function() {
 
     var scope, window, socket, VotingModel;
 
@@ -63,7 +63,7 @@ describe('ClientController Tests', function() {
 
         scope.model.loggedInUsers = [];
 
-        scope.onLogin('room', 'Peter');
+        scope.onLogin('Peter');
 
         expect(scope.model.loggedInUsers).toEqual(['Peter']);
     });

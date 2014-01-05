@@ -16,7 +16,7 @@ module.exports = function(config){
             'app/**/*.js': 'coverage'
         },
 
-        reporters: ['coverage'],
+        reporters: ['dots', 'coverage'],
 
         coverageReporter: {
             type : 'html',
@@ -30,7 +30,6 @@ module.exports = function(config){
         browsers : ['Chrome'],
 
         plugins : [
-            'karma-junit-reporter',
             'karma-chrome-launcher',
             'karma-firefox-launcher',
             'karma-jasmine',
