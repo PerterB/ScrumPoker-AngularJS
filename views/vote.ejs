@@ -1,0 +1,109 @@
+<!doctype html>
+<html data-ng-app="planningApp">
+  <head>
+    <title>Real-Time Planning Poker</title>`
+    
+      <link href="/lib/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"/>
+      <link href="/lib/bootstrap/css/bootstrap-theme.css" rel="stylesheet" media="screen"/>
+      <link href="/lib/bootstrap/css/jumbotron-narrow.css" rel="stylesheet" media="screen"/>
+      <link href="/lib/bootstrap/css/signin.css" rel="stylesheet" media="screen"/>
+      
+      <link href="/style/css/cards.css" rel="stylesheet" media="screen"/>
+      <link href="/style/css/scrummaster.css" rel="stylesheet" media="screen"/>
+      <!--[if lt IE 9]>
+         <script src="../js/libs/html5shiv.js"></script>
+         <script src="../js/libs/respond.min.js"></script>
+      <![endif]-->
+      
+      <script>
+      // initial list of Users - gets passed into Voting
+      var App = {};
+      App.loggedInUsers = <%-JSON.stringify(users) %>;
+      </script>
+     
+  </head>
+  <body>
+    
+    <div class="container" data-ng-controller="ClientController">
+    
+       <div class="header">
+          <h3 class="text-muted">Planning Poker</h3>
+       </div>
+
+       <div class="jumbotron" data-ng-hide="model.loggedIn">
+         <form class="form-signin">
+           <h2 class="form-signin-heading text-muted">Sign In Here</h2>
+           <input type="text" placeholder="Username" data-ng-model="model.username" class="form-control" required autofocus="autofocus"/>
+           <button id="pseudoSet" class="btn btn-lg btn-success btn-block" data-ng-click="login()">Login</button>
+         </form>
+       </div>
+
+       <div class="alert alert-danger" data-ng-show="model.showErrorMessage"><span class="glyphicon glyphicon-ban-circle"></span>&nbsp;{{ model.errorMessage }}</div>
+
+       <div data-ng-show="model.loggedIn">
+       
+           <div class="row marketing" >
+              <h4 id="welcome" class="text-muted">Welcome {{ model.username }}</h4>
+               <div class="alert alert-info" data-ng-hide="model.votingOpen"><span class="glyphicon glyphicon-time"></span> &nbsp;{{ model.statusMessage }}</div>
+
+
+              <div data-ng-show="model.votingOpen">
+
+                  <div class="alert alert-info" data-ng-show="model.showCurrentVote">
+                      <span class="glyphicon glyphicon-tag"></span>
+                      Current Vote: {{ model.currentVote }}
+                  </div>
+                  <div class="alert alert-success" data-ng-show="model.showVoteSentMessage">
+                      <span class="glyphicon glyphicon-ok-circle"></span>
+                      {{ model.voteSentMessage }}
+                  </div>
+
+                  <div id="votingOptions">
+                      <div data-ng-repeat="option in votingModel.defaultVotingOption.values">
+                          <div class="card" data-ng-click="sendVote(option)">{{ option }}</div>
+                      </div>
+                  </div>
+              </div>
+
+           </div>
+
+           <div class="panel panel-default" data-ng-show="model.showSummary">
+               <div class="panel-heading">
+                   <h3 class="panel-title" id="summaryTitle">Summary</h3>
+               </div>
+               <div class="panel-body">
+                   <div class="clearFix"></div>
+                   <div>
+                       <div data-ng-repeat="summary in model.summaryText">{{ summary }}</div>
+                   </div>
+               </div>
+           </div>
+
+           <br />
+           <div class="panel panel-default" data-ng-show="model.showVoteLog">
+               <div class="panel-heading">
+                   <h3 class="panel-title">Voting Results Log</h3>
+               </div>
+               <div class="panel-body">
+                   <div>
+                       <div data-ng-repeat="log in model.voteLog">Final Vote for {{log.backlogNumber}} was <b>{{log.finalVote}}</b></div>
+                   </div>
+               </div>
+           </div>
+       </div>
+       
+       <div class="footer"></div>
+    </div>
+    
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/lib/jquery/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="/lib/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/lib/angular/angular.min.js"></script>
+    <script type="text/javascript" src="/app/PlanningApp.js"></script>
+    <script type="text/javascript" src="/app/factory/socket.js"></script>
+    <script type="text/javascript" src="/app/factory/ClientModel.js"></script>
+    <script type="text/javascript" src="/app/factory/VotingModel.js"></script>
+    <script type="text/javascript" src="/app/controller/ClientController.js"></script>
+  </body>
+</html>

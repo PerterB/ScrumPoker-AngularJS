@@ -1,0 +1,18 @@
+.scrummaster .card {
+	background-image: url(../images/user.png);
+	background-size: 100px 100px;
+	background-color: #ccc;
+	background-repeat: no-repeat;
+	font-size: 20px;
+	margin-bottom: 50px;
+}
+
+.scrummaster .card .username {
+	top: 0px;
+	position:relative;
+}
+
+.scrummaster .card .vote {
+	font-size: 60px;
+	padding-left: 70px;
+}
