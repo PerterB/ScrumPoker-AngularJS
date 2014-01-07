@@ -42,18 +42,10 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 
     /**
      * onVote
-     * Add the vote to the list of votes
      * Enable the 'Reveal' button
-     * Work out of the vote is completed or not
-     *
-     * @param voteData an object with a name and vote value
      */
-    $scope.onVote = function(voteData) {
+    $scope.onVote = function() {
 
-        var user = voteData['login'],
-            vote = voteData['vote'];
-
-        $scope.model.votes[user] = vote;
         if ($scope.model.disableReveal) {
 
             $scope.model.disableReveal = false;

@@ -1,9 +1,21 @@
-.card {
+.card-small {
+    float: left;
+    width: 50px;
+    height: 40px;
+    margin: 3px;
+    color: #666;
+    border: 1px solid #ddd;
+    font-size: 15px;
+    text-align: center;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+.card-large {
   float: left;
   width: 155px;
   height: 100px;
   margin: 5px;
-  border: 5px;
   color: #666;
   border: 2px solid #ddd;
   font-size: 72px;
@@ -12,9 +24,10 @@
   cursor:pointer;
   -moz-border-radius: 5px;
   border-radius: 5px;
+  padding-bottom: 25px;
 }
 
-.card:hover {
+.card-large:hover {
 	background-color:#ddd;
 }
 

@@ -83,22 +83,11 @@ describe('ScrumMasterController Tests', function() {
         expect(scope.model.loggedInUsers).toEqual(['Peter']);
     });
 
-    it('should register votes', function() {
-
-        var voteData = {'login': 'Peter', 'vote': '13'};
-        scope.model.votes = {};
-
-        scope.onVote(voteData);
-
-        expect(scope.model.votes['Peter']).toEqual('13');
-    });
-
     it('should enable the reveal button after a vote', function() {
-        var voteData = {'login': 'Peter', 'vote': '13'};
-        scope.model.votes = {};
+
         scope.model.disableReveal = true;
 
-        scope.onVote(voteData);
+        scope.onVote();
 
         expect(scope.model.disableReveal).toEqual(false);
     });

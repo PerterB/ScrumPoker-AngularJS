@@ -28,27 +28,30 @@
        <div class="header">
           <h3 class="text-muted">Scrum Master</h3>
        </div>
-        
-      <div class="card" data-user="{{user}}" data-ng-repeat="user in model.loggedInUsers">
-         <p class="vote">
-         
-            <!-- After Reveal, User has voted -->
-            <span data-ng-show="!model.hideVotes && model.votes[user]">{{ model.votes[user] }}</span>
-            
-            <!-- After Reveal, User has abstained -->
-            <span data-ng-show="!model.hideVotes && !model.votes[user]" class="glyphicon glyphicon-ban-circle"></span>
-            
-            <!-- Before Reveal, user has not voted yet -->
-            <span data-ng-show="model.hideVotes && !model.votes[user]" class="glyphicon glyphicon-time"></span>
-            
-            <!-- Before Reveal, user has voted -->
-            <span data-ng-show="model.hideVotes && model.votes[user]"  class="glyphicon glyphicon-check"></span>
-            
-         </p>
-         <p class="username">{{user}}</p>
+
+      <div data-ng-controller="VotersController">
+          <div class="card-large" data-user="{{user}}" data-ng-repeat="user in model.loggedInUsers">
+              <p class="vote">
+
+                  <!-- After Reveal, User has voted -->
+                  <span data-ng-show="!model.hideVotes && model.votes[user]">{{ model.votes[user] }}</span>
+
+                  <!-- After Reveal, User has abstained -->
+                  <span data-ng-show="!model.hideVotes && !model.votes[user]" class="glyphicon glyphicon-ban-circle"></span>
+
+                  <!-- Before Reveal, user has not voted yet -->
+                  <span data-ng-show="model.hideVotes && !model.votes[user]" class="glyphicon glyphicon-time"></span>
+
+                  <!-- Before Reveal, user has voted -->
+                  <span data-ng-show="model.hideVotes && model.votes[user]"  class="glyphicon glyphicon-check"></span>
+
+              </p>
+              <p class="username">{{user}}</p>
+          </div>
+          <div class="after-card"></div>
       </div>
-      <div class="after-card"></div>
-      
+
+
       <!-- Simple Mode Buttons -->
       <p>
          <button data-toggle="modal" data-target="#newVoteModal" class="btn btn-default" data-ng-show="model.simpleMode">New Vote</button>
@@ -75,17 +78,17 @@
 
       <!-- Backlog Provider -->
 	  <div data-ng-repeat="backlog in model.preparedBacklogs" class="list-group-item">
-	  
+
 	     <div class="btn-group pull-right">
 	        <button class="btn btn-default" data-ng-click="beginBacklogVote(backlog)">Begin Vote</button>
-	     </div> 
-	     
-	     <h4 class="list-group-item-heading">{{backlog.id}}</h4> 
+	     </div>
+
+	     <h4 class="list-group-item-heading">{{backlog.id}}</h4>
 	     <p class="list-group-item-text">{{backlog.title}}</p>
 	  </div>
 
 
-	  
+
 	  <br />
       <div class="panel panel-default">
          <div class="panel-heading">
@@ -101,7 +104,7 @@
             </div>
          </div>
       </div>
-       
+
        <div role="dialog" aria-hidden="true" id="newVoteModal" class="modal fade" clear-on-show="backlogText">
           <div class="modal-dialog">
              <div class="modal-content">
@@ -119,8 +122,8 @@
              </div>
           </div>
        </div>
-       
-       
+
+
        <div role="dialog" aria-hidden="true" id="finalVoteModal" class="modal fade" clear-on-show="finalVoteValue">
           <div class="modal-dialog">
              <div class="modal-content">
@@ -152,5 +155,6 @@
     <script src="/app/factory/socket.js"></script>
     <script src="/app/factory/VotingModel.js"></script>
     <script src="/app/controller/ScrumMasterController.js"></script>
+    <script src="/app/controller/VotersController.js"></script>
   </body>
 </html>

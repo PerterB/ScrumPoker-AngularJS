@@ -47,7 +47,7 @@ describe('ClientController Tests', function() {
 
         scope.model.loggedInUsers = [];
 
-        scope.onLogin('room', 'Peter');
+        scope.onLogin('Peter');
 
         expect(scope.model.loggedInUsers).toEqual(['Peter']);
     });

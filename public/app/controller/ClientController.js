@@ -24,9 +24,8 @@ PlanningApp.app.controller('ClientController', function ($scope, $window, socket
      * @param rm room name
      * @param username name of the user who has just logged in
      */
-    $scope.onLogin = function(rm, username) {
+    $scope.onLogin = function(username) {
         $scope.model.loggedInUsers.push(username);
-
 
 //        // call logoff on unload
 //        window.onbeforeunload = (function(name) {
@@ -56,6 +55,7 @@ PlanningApp.app.controller('ClientController', function ($scope, $window, socket
      */
     $scope.onBeginVote = function(backlogNumber) {
         $scope.model.votingOpen = true;
+        $scope.model.currentVote = backlogNumber;
         $scope.model.currentVote = backlogNumber;
         $scope.model.showCurrentVote = true;
         $scope.model.showVoteSentMessage = false;

@@ -1,0 +1,19 @@
+.voter .card-small {
+    background-color: #eee;
+    background-repeat: no-repeat;
+    font-size: 20px;
+    margin-bottom: 50px;
+}
+
+.voter .card-small .username {
+    top: 10px;
+    position:relative;
+    font-size: 12px;
+    width: 50x;
+    word-break: break-all;
+}
+
+.voter .card-small .vote {
+    padding-top: 5px;
+    font-size: 20px;
+}
