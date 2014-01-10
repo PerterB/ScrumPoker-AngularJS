@@ -14,17 +14,11 @@
          script(src="./js/libs/html5shiv.js")
          script(src="./js/libs/respond.min.js")
       -->
-      
-      <script>
-      // initial list of Users - gets passed into VotingController
-      var App = {};      
-      App.loggedInUsers = <%-JSON.stringify(users) %>;
-      </script>
-     
   </head>
   <body>
-    
-    <div class="container scrummaster" data-ng-controller="ScrumMasterController">
+
+    <div class="container scrummaster" data-ng-controller="ScrumMasterController"
+         data-ng-init='init(<%-JSON.stringify(users) %>)'>
        <div class="header">
           <h3 class="text-muted">Scrum Master</h3>
        </div>
@@ -37,13 +31,16 @@
                   <span data-ng-show="!model.hideVotes && model.votes[user]">{{ model.votes[user] }}</span>
 
                   <!-- After Reveal, User has abstained -->
-                  <span data-ng-show="!model.hideVotes && !model.votes[user]" class="glyphicon glyphicon-ban-circle"></span>
+                  <span data-ng-show="!model.hideVotes && !model.votes[user]"
+                        class="glyphicon glyphicon-ban-circle"></span>
 
                   <!-- Before Reveal, user has not voted yet -->
-                  <span data-ng-show="model.hideVotes && !model.votes[user]" class="glyphicon glyphicon-time"></span>
+                  <span data-ng-show="model.hideVotes && !model.votes[user]"
+                        class="glyphicon glyphicon-time"></span>
 
                   <!-- Before Reveal, user has voted -->
-                  <span data-ng-show="model.hideVotes && model.votes[user]"  class="glyphicon glyphicon-check"></span>
+                  <span data-ng-show="model.hideVotes && model.votes[user]"
+                        class="glyphicon glyphicon-check"></span>
 
               </p>
               <p class="username">{{user}}</p>
@@ -54,8 +51,10 @@
 
       <!-- Simple Mode Buttons -->
       <p>
-         <button data-toggle="modal" data-target="#newVoteModal" class="btn btn-default" data-ng-show="model.simpleMode">New Vote</button>
-         <button class="btn btn-default" data-ng-click="revealVotes()" data-ng-disabled="model.disableReveal">Reveal Votes</button>
+         <button data-toggle="modal" data-target="#newVoteModal" class="btn btn-default"
+                 data-ng-show="model.simpleMode">New Vote</button>
+         <button class="btn btn-default" data-ng-click="revealVotes()"
+                 data-ng-disabled="model.disableReveal">Reveal Votes</button>
       </p>
 
       <br />
@@ -65,7 +64,8 @@
          </div>
          <div class="panel-body">
             <div class="btn-group pull-right">
-               <button data-toggle="modal" data-target="#finalVoteModal" id="finalVote" class="btn btn-default">Final Vote</button>
+               <button data-toggle="modal" data-target="#finalVoteModal" id="finalVote"
+                       class="btn btn-default">Final Vote</button>
             </div>
             <div class="clearFix"></div>
             <div>
@@ -77,14 +77,48 @@
 
 
       <!-- Backlog Provider -->
-	  <div data-ng-repeat="backlog in model.preparedBacklogs" class="list-group-item">
+	  <div data-ng-repeat="backlog in model.preparedBacklogs" ng-class="{completedVoting:backlog.finalVoteValue,currentlyVoting:model.currentBacklog==backlog.id}" class="list-group-item">
 
 	     <div class="btn-group pull-right">
-	        <button class="btn btn-default" data-ng-click="beginBacklogVote(backlog)">Begin Vote</button>
+
+             <div class="dropdown">
+
+                 <ul class="nav nav-pills">
+                    <li class="dropdown">
+
+                        <a id="actionsMenu{{$index}}" data-toggle="dropdown" href="#">
+                            <span class="badge">{{backlog.finalVoteValue}}</span> Actions
+                            <b class="caret"></b>
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="actionsMenu{{$index}}">
+
+                            <li>
+                                <a href="#" class="dropdown" data-ng-click="beginBacklogVote(backlog)">Begin Vote</a>
+                            </li>
+
+                            <li ng-class="{disabled:backlog.finalVoteValue===undefined}">
+                                <a href="#" class="dropdown" data-ng-click="saveBacklog(backlog)">Save</a>
+                            </li>
+
+                            <li class="divider"></li>
+
+                            <li>
+                                <a href="#" class="dropdown">Change Status</a>
+                            </li>
+
+                        </ul>
+
+                    </li>
+                 </ul>
+
+             </div>
+
 	     </div>
 
 	     <h4 class="list-group-item-heading">{{backlog.id}}</h4>
 	     <p class="list-group-item-text">{{backlog.title}}</p>
+
 	  </div>
 
 
@@ -100,7 +134,9 @@
             </div>
             <div class="clearFix"></div>
             <div>
-                <div data-ng-repeat="log in model.voteLog track by $index">Final Vote for {{log.backlogNumber}} was <b>{{log.finalVote}}</b></div>
+                <div data-ng-repeat="log in model.voteLog track by $index">
+                    Final Vote for {{log.backlogNumber}} was <b>{{log.finalVote}}</b>
+                </div>
             </div>
          </div>
       </div>
@@ -113,11 +149,14 @@
                    <h4 class="modal-title">New Vote</h4>
                 </div>
                 <div class="modal-body">
-                   <input type="text" placeholder="Backlog Number" required="required" autofocus="autofocus" class="form-control" data-ng-model="model.backlogNumber" enter-close="newVoteModal"  on-close="beginVote" id="backlogText"/>
+                   <input type="text" placeholder="Backlog Number" required="required" autofocus="autofocus"
+                          class="form-control" data-ng-model="model.backlogNumber" enter-close="newVoteModal"
+                          on-close="beginVote()" id="backlogText"/>
                 </div>
                 <div class="modal-footer">
                    <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
-                   <button type="button" data-ng-click="beginVote()" data-dismiss="modal" class="btn btn-primary">Begin Vote</button>
+                   <button type="button" data-ng-click="beginVote()"
+                           data-dismiss="modal" class="btn btn-primary">Begin Vote</button>
                 </div>
              </div>
           </div>
@@ -129,14 +168,21 @@
              <div class="modal-content">
                   <div class="modal-header">
                      <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
-                     <h4 class="modal-title">Final Vote</h4>
+                     <h4 class="modal-title">Final Vote: {{model.backlogNumber}}</h4>
                   </div>
                   <div class="modal-body">
-                     <input type='text' placeholder='Enter Final Vote' required autofocus id="finalVoteValue" class="form-control" data-ng-model="model.finalVoteValue"  enter-close="finalVoteModal" on-close="saveVote"/>
+
+                      <label for="disabledTextInput">Final Vote Value</label>
+                      <select class="form-control" data-ng-model="model.finalVoteValue">
+                          <option>---</option>
+                          <option data-ng-repeat="option in model.defaultVotingOption.values">{{option}}</option>
+                      </select>
+
                   </div>
                   <div class="modal-footer">
                      <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
-                     <button type="button" data-dismiss="modal" class="btn btn-primary" data-ng-click="saveVote()">Save</button>
+                     <button type="button" data-dismiss="modal" class="btn btn-primary"
+                             data-ng-click="saveVote()">Save</button>
                   </div>
              </div>
           </div>

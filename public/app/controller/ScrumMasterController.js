@@ -2,6 +2,12 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 
     $scope.model = VotingModel;
 
+    $scope.init = function(loggedInUsers) {
+
+        $scope.model.loggedInUsers = loggedInUsers;
+
+    };
+
     /**
      * onConnect
      * join the room and request backlogs
@@ -132,8 +138,26 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 
         socket.emit('finalVote', finalVoteObj);
 
+        if ($scope.model.preparedBacklogs) {
+            for (var i = 0; i < $scope.model.preparedBacklogs.length; i++) {
+                if ($scope.model.backlogNumber === $scope.model.preparedBacklogs[i].id) {
+                    $scope.model.preparedBacklogs[i].finalVoteValue = $scope.model.finalVoteValue;
+                    break;
+                }
+            }
+        }
+
+
         $scope.reset();
 	};
+
+    $scope.saveBacklog = function(backlog) {
+
+        if (backlog.finalVoteValue) {
+            console.log('emit save vote', backlog);
+            // TODO
+        }
+    };
 	
 	$scope.clearLog = function() {
 		

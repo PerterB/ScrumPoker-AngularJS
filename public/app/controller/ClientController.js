@@ -4,6 +4,13 @@ PlanningApp.app.controller('ClientController', function ($scope, $window, socket
 
     $scope.votingModel = VotingModel;
 
+
+    $scope.init = function(loggedInUsers) {
+
+        $scope.votingModel.loggedInUsers = loggedInUsers;
+
+    };
+
     /**
      * onConnect
      *
@@ -25,7 +32,7 @@ PlanningApp.app.controller('ClientController', function ($scope, $window, socket
      * @param username name of the user who has just logged in
      */
     $scope.onLogin = function(username) {
-        $scope.model.loggedInUsers.push(username);
+        $scope.votingModel.loggedInUsers.push(username);
 
 //        // call logoff on unload
 //        window.onbeforeunload = (function(name) {
@@ -42,9 +49,9 @@ PlanningApp.app.controller('ClientController', function ($scope, $window, socket
     $scope.onLogout = function(username) {
 
         // remove the user from the list
-        var index = $scope.model.loggedInUsers.indexOf(username);
+        var index = $scope.votingModel.loggedInUsers.indexOf(username);
         if (index !== -1) {
-            $scope.model.loggedInUsers.splice(index, 1);
+            $scope.votingModel.loggedInUsers.splice(index, 1);
         }
     };
 
@@ -114,7 +121,7 @@ PlanningApp.app.controller('ClientController', function ($scope, $window, socket
 
         if ($scope.model.username !== '') {
 
-            if ($scope.model.loggedInUsers.indexOf($scope.model.username) === -1) {
+            if ($scope.votingModel.loggedInUsers.indexOf($scope.model.username) === -1) {
                 socket.emit('login', $scope.model.username);
 
                 $scope.model.showErrorMessage = false;
@@ -122,7 +129,7 @@ PlanningApp.app.controller('ClientController', function ($scope, $window, socket
                 $scope.model.showStatusMessage = true;
                 $scope.model.loggedIn = true;
 
-                $scope.model.loggedInUsers.push($scope.model.username);
+                $scope.votingModel.loggedInUsers.push($scope.model.username);
             } else {
                 $scope.showErrorMessage('That name is already taken, try again');
             }

@@ -4,7 +4,7 @@
 PlanningApp.app.factory('VotingModel', function() {
 
     return {
-        loggedInUsers: App.loggedInUsers, // TODO: fix this shit
+        loggedInUsers: [],
 
         currentBacklog: '',
 

@@ -14,17 +14,11 @@
          <script src="../js/libs/html5shiv.js"></script>
          <script src="../js/libs/respond.min.js"></script>
       <![endif]-->
-      
-      <script>
-      // initial list of Users - gets passed into Voting
-      var App = {};
-      App.loggedInUsers = <%-JSON.stringify(users) %>;
-      </script>
      
   </head>
   <body>
 
-    <div class="container voter" data-ng-controller="ClientController">
+    <div class="container voter" data-ng-controller="ClientController" data-ng-init='init(<%-JSON.stringify(users) %>)'>
     
        <div class="header">
           <h3 class="text-muted">Planning Poker</h3>

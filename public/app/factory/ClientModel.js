@@ -5,7 +5,7 @@ PlanningApp.app.factory('ClientModel', function() {
 
     return {
 
-        loggedInUsers: App.loggedInUsers,
+        loggedInUsers: [],
 
         loggedIn: false,
 

@@ -16,3 +16,11 @@
 	font-size: 60px;
 	padding-left: 70px;
 }
+
+.currentlyVoting {
+    background-color: aliceblue;
+}
+
+.completedVoting {
+    background-color: honeydew !important;
+}

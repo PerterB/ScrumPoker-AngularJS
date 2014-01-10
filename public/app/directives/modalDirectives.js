@@ -10,12 +10,9 @@ PlanningApp.app.directive('enterClose', function() {
 				if (evt.keyCode === 13) {
 
                     // call the on-close method if it exists
-                    if (attrs.onClose && scope[attrs.onClose]) {
-                        scope[attrs.onClose]();
+                    if (attrs.onClose) {
+                        scope.$apply(attrs.onClose);
                     }
-
-                    // forces ui update
-                    scope.$apply();
 
 					$('#' + attrs.enterClose).modal('hide');	
 				}

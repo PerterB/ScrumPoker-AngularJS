@@ -45,29 +45,29 @@ describe('ClientController Tests', function() {
 
     it('should update the list of users when someone logs in', function() {
 
-        scope.model.loggedInUsers = [];
+        scope.votingModel.loggedInUsers = [];
 
         scope.onLogin('Peter');
 
-        expect(scope.model.loggedInUsers).toEqual(['Peter']);
+        expect(scope.votingModel.loggedInUsers).toEqual(['Peter']);
     });
 
     it('should update the list of users when someone logs out', function() {
 
-        scope.model.loggedInUsers = ['Peter'];
+        scope.votingModel.loggedInUsers = ['Peter'];
 
         scope.onLogout('Peter');
 
-        expect(scope.model.loggedInUsers).toEqual([]);
+        expect(scope.votingModel.loggedInUsers).toEqual([]);
     });
 
     it('should not update the list of users when an unknown user logs out', function() {
 
-        scope.model.loggedInUsers = ['Peter'];
+        scope.votingModel.loggedInUsers = ['Peter'];
 
         scope.onLogout('Paul');
 
-        expect(scope.model.loggedInUsers).toEqual(['Peter']);
+        expect(scope.votingModel.loggedInUsers).toEqual(['Peter']);
     });
 
     it('should setup the page when a vote begins', function() {
@@ -107,7 +107,7 @@ describe('ClientController Tests', function() {
 
     it('should log a user in', function() {
         scope.model.username = "Peter";
-        scope.model.loggedInUsers = [];
+        scope.votingModel.loggedInUsers = [];
 
         scope.login();
 
@@ -115,13 +115,13 @@ describe('ClientController Tests', function() {
         expect(scope.model.showErrorMessage).toBe(false);
         expect(scope.model.showStatusMessage).toBe(true);
         expect(scope.model.loggedIn).toBe(true);
-        expect(scope.model.loggedInUsers).toEqual(['Peter']);
+        expect(scope.votingModel.loggedInUsers).toEqual(['Peter']);
 
     });
 
     it('should display an error if username is taken', function() {
 
-        scope.model.loggedInUsers = ['Peter'];
+        scope.votingModel.loggedInUsers = ['Peter'];
 
         scope.model.username = 'Peter';
 

@@ -16,19 +16,17 @@ describe('Modal Directives Tests', function() {
     it('enterClose should close the modal when the user types enter', function() {
 
         inject(function($compile, $rootScope) {
-            var element = $compile('<span enter-close="something" on-close="closeFn"></span>')($rootScope);
+            var element = $compile('<span enter-close="something" on-close="closeFn()"></span>')($rootScope);
 
 
             expect(element[0].onkeyup).toBeTruthy();
 
-            $rootScope.closeFn = jasmine.createSpy();
             $rootScope.$apply = jasmine.createSpy();
 
             element[0].onkeyup({keyCode: 13});
 
 
-            expect($rootScope.closeFn).toHaveBeenCalled();
-            expect($rootScope.$apply).toHaveBeenCalled();
+            expect($rootScope.$apply).toHaveBeenCalledWith("closeFn()");
             expect($).toHaveBeenCalledWith('#something');
             expect(bsModal.modal).toHaveBeenCalledWith('hide');
 
@@ -43,12 +41,10 @@ describe('Modal Directives Tests', function() {
 
             expect(element[0].onkeyup).toBeTruthy();
 
-            $rootScope.closeFn = jasmine.createSpy();
             $rootScope.$apply = jasmine.createSpy();
 
             element[0].onkeyup({keyCode: 10});
 
-            expect($rootScope.closeFn).not.toHaveBeenCalled();
             expect($rootScope.$apply).not.toHaveBeenCalled();
             expect($).not.toHaveBeenCalled();
         });

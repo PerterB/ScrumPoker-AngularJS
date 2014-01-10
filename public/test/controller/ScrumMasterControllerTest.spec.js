@@ -40,6 +40,16 @@ describe('ScrumMasterController Tests', function() {
 
     }));
 
+    it('should assign the loggedIn users', function() {
+
+        scope.model.loggedInUsers = [];
+
+        scope.init(['Peter']);
+
+        expect(scope.model.loggedInUsers).toEqual(['Peter']);
+
+    });
+
     //TODO: what if no room?
     it('should join the room on connect', function() {
 
@@ -164,6 +174,48 @@ describe('ScrumMasterController Tests', function() {
 
         expectReset();
     });
+
+    it('should set the final voteValue on the current backlog if there are prepared backlogs', function() {
+
+        var preparedBacklogs = [{
+            id: 'B-12345',
+            title: 'First'
+        }];
+
+        scope.model.preparedBacklogs = preparedBacklogs;
+        scope.model.voteLog = [];
+        scope.model.backlogNumber = 'B-12345';
+        scope.model.finalVoteValue = '13';
+
+        scope.saveVote();
+
+        expect(scope.model.preparedBacklogs[0].finalVoteValue).toEqual('13');
+
+    });
+
+    it('should only set the final voteValue on the current backlog if there are prepared backlogs', function() {
+
+        var preparedBacklogs = [{
+            id: 'B-12345',
+            title: 'First'
+        }, {
+            id: 'B-54321',
+            title: 'Second'
+        }];
+
+        scope.model.preparedBacklogs = preparedBacklogs;
+        scope.model.voteLog = [];
+        scope.model.backlogNumber = 'B-12345';
+        scope.model.finalVoteValue = '13';
+
+        scope.saveVote();
+
+        expect(scope.model.preparedBacklogs[0].finalVoteValue).toEqual('13');
+        expect(scope.model.preparedBacklogs[1].finalVoteValue).toBeUndefined();
+
+    });
+
+    //TODO: saveBacklog Tests
 
     it('should clear the log', function() {
 

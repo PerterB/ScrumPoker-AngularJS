@@ -18,7 +18,6 @@ PlanningApp.app.controller('VotersController', function ($scope, $window, socket
         $scope.model.votes[user] = vote;
     };
 
-
     /**
     * When the scrum master reveals the vote
     *
@@ -48,7 +47,6 @@ PlanningApp.app.controller('VotersController', function ($scope, $window, socket
     $scope.$on('$destroy', function (event) {
         socket.removeAllListeners();
     });
-
 
     $scope.filterCurrentUser = function($user) {
         return $user !== $scope.$parent.model.username;
