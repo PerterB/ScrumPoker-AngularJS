@@ -5,7 +5,6 @@
     "dependencies": {
         "socket.io": "latest",
         "express": "latest",
-        "jade": "latest",
         "forever": "latest",
         "escape-html": "latest",
         "ejs": "latest"

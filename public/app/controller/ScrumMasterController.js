@@ -8,6 +8,10 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 
     };
 
+
+    $scope.votingUrl = $window.location.href;
+    $scope.votingUrl = $scope.votingUrl.replace('scrummaster', 'vote');
+
     /**
      * onConnect
      * join the room and request backlogs

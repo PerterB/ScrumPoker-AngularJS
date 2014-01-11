@@ -27,6 +27,9 @@ var routes = {
 	'/': function(req, res) {
 		res.render('index');
 	},
+    '/help': function(req, res) {
+        res.render('help');
+    },
 	'/vote/:room' : function(req, res) {
 		res.render('vote', { users: socketEvents.allClients[req.params.room] || []});
 	},

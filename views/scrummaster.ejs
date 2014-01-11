@@ -9,11 +9,11 @@
       
       <link href="/style/css/cards.css" rel="stylesheet" media="screen"/>
       <link href="/style/css/scrummaster.css" rel="stylesheet" media="screen"/>
-       
-      <!-- //if lt IE 9
-         script(src="./js/libs/html5shiv.js")
-         script(src="./js/libs/respond.min.js")
-      -->
+
+      <!--[if lt IE 9]>
+      <script src="/lib/jquery/html5shiv.js"></script>
+      <script src="/lib/jquery/respond.min.js"></script>
+      <![endif]-->
   </head>
   <body>
 
@@ -140,6 +140,13 @@
             </div>
          </div>
       </div>
+
+      <div class="alert alert-success">
+          <h3 class="text-muted">Options</h3>
+          <label>Invite Users to the following URL:</label>
+          <input type="text" class="form-control" value="{{votingUrl}}" readonly/>
+      </div>
+      <br />
 
        <div role="dialog" aria-hidden="true" id="newVoteModal" class="modal fade" clear-on-show="backlogText">
           <div class="modal-dialog">
