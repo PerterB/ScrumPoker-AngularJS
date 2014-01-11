@@ -116,7 +116,7 @@
 
 	     </div>
 
-	     <h4 class="list-group-item-heading">{{backlog.id}}</h4>
+	     <h4 class="list-group-item-heading"><a href="{{backlog.href}}" target="_new">{{backlog.id}}</a></h4>
 	     <p class="list-group-item-text">{{backlog.title}}</p>
 
 	  </div>
@@ -203,6 +203,7 @@
     <script type="text/javascript" src="/lib/bootstrap/js/bootstrap.js"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script src="/lib/angular/angular.min.js"></script>
+    <script type="text/javascript" src="/lib/angular/angular-sanitize.min.js"></script>
     <script src="/app/PlanningApp.js"></script>
     <script src="/app/directives/modalDirectives.js"></script>
     <script src="/app/factory/socket.js"></script>

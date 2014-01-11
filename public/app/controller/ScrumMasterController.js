@@ -6,11 +6,11 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 
         $scope.model.loggedInUsers = loggedInUsers;
 
+        var currentUrl = $window.location.href;
+        if (currentUrl && currentUrl.indexOf('scrummaster')) {
+            $scope.votingUrl = currentUrl.replace('scrummaster', 'vote');
+        }
     };
-
-
-    $scope.votingUrl = $window.location.href;
-    $scope.votingUrl = $scope.votingUrl.replace('scrummaster', 'vote');
 
     /**
      * onConnect
@@ -93,12 +93,12 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 	 * When a new vote begins.
 	 * Reset topic
 	 */
-	$scope.beginVote = function() {
+	$scope.beginVote = function(backlog) {
 
 		$scope.reset();
 
         $scope.model.currentBacklog = $scope.model.backlogNumber;
-		socket.emit('beginVote', $scope.model.backlogNumber, $scope.model.defaultVotingOption.values);
+		socket.emit('beginVote', backlog || $scope.model.backlogNumber, $scope.model.defaultVotingOption.values);
 	};
 
     /**
@@ -114,7 +114,8 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 	$scope.beginBacklogVote = function(backlog) {
 		
 		$scope.model.backlogNumber = backlog.id;
-        $scope.beginVote();
+
+        $scope.beginVote(backlog);
 	};
 
 	/**

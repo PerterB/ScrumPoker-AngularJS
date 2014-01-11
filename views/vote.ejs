@@ -51,7 +51,13 @@
             </p>
             <div class="jumbotron">
                 <h1>Welcome {{ model.username }}</h1>
-                <p>This is an example to show the potential of an offcanvas layout pattern in Bootstrap. Try some responsive-range viewport sizes to see it in action.</p>
+                <p data-ng-show="model.backlogDetails">
+                    {{model.backlogDetails.id}}
+                    <br />
+                    {{model.backlogDetails.title}}
+                    <br />
+                    <div data-ng-show="model.backlogDetails.description" data-ng-bind-html="model.backlogDetails.description" class="well" style="height: 300px; overflow: auto"></div>
+                </p>
 
             </div>
             <div class="alert alert-info" data-ng-hide="model.votingOpen"><span class="glyphicon glyphicon-time"></span> &nbsp;{{ model.statusMessage }}</div>
@@ -141,6 +147,7 @@
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="/lib/jquery/jquery-ui-1.10.3.custom.min.js"></script>
 <script type="text/javascript" src="/lib/angular/angular.min.js"></script>
+<script type="text/javascript" src="/lib/angular/angular-sanitize.min.js"></script>
 <script type="text/javascript" src="/app/PlanningApp.js"></script>
 <script type="text/javascript" src="/app/factory/socket.js"></script>
 <script type="text/javascript" src="/app/factory/ClientModel.js"></script>

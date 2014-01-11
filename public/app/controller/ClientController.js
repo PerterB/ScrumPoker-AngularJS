@@ -15,7 +15,6 @@ PlanningApp.app.controller('ClientController', function ($scope, $window, socket
      * onConnect
      *
      * Extract the room from the path and join
-     * TODO: What if no room?
      */
     $scope.onConnect = function() {
 
@@ -60,11 +59,19 @@ PlanningApp.app.controller('ClientController', function ($scope, $window, socket
      *
      * @param backlogNumber
      */
-    $scope.onBeginVote = function(backlogNumber) {
+    $scope.onBeginVote = function(backlog, votingOptions) {
+
+        if (backlog.id) {
+            $scope.model.backlogNumber = backlog.id;
+            $scope.model.backlogDetails = backlog;
+            $scope.model.showCurrentVote = false;
+        } else {
+            $scope.model.backlogNumber = backlog;
+            $scope.model.currentVote = backlog;
+            $scope.model.backlogDetails = undefined;
+            $scope.model.showCurrentVote = true;
+        }
         $scope.model.votingOpen = true;
-        $scope.model.currentVote = backlogNumber;
-        $scope.model.currentVote = backlogNumber;
-        $scope.model.showCurrentVote = true;
         $scope.model.showVoteSentMessage = false;
         $scope.model.showSummary = false;
     };
@@ -110,9 +117,6 @@ PlanningApp.app.controller('ClientController', function ($scope, $window, socket
     $scope.$on('$destroy', function (event) {
         socket.removeAllListeners();
     });
-
-
-
 
     /**
      * When the user sets their login name.
