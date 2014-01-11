@@ -1,137 +1,158 @@
-<!doctype html>
-<html data-ng-app="planningApp">
-  <head>
-    <title>Real-Time Planning Poker</title>`
-    
-      <link href="/lib/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"/>
-      <link href="/lib/bootstrap/css/bootstrap-theme.css" rel="stylesheet" media="screen"/>
-      <link href="/lib/bootstrap/css/jumbotron-narrow.css" rel="stylesheet" media="screen"/>
-      <link href="/lib/bootstrap/css/signin.css" rel="stylesheet" media="screen"/>
-      
-      <link href="/style/css/cards.css" rel="stylesheet" media="screen"/>
-      <link href="/style/css/voter.css" rel="stylesheet" media="screen"/>
-      <!--[if lt IE 9]>
-         <script src="/lib/jquery/html5shiv.js"></script>
-         <script src="/lib/jquery/respond.min.js"></script>
-      <![endif]-->
-     
-  </head>
-  <body>
 
-    <div class="container voter" data-ng-controller="ClientController" data-ng-init='init(<%-JSON.stringify(users) %>)'>
-    
-       <div class="header">
-          <h3 class="text-muted">Planning Poker</h3>
-       </div>
+<!DOCTYPE html>
+<html lang="en" data-ng-app="planningApp">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
 
+    <title>Real-Time Planning Poker</title>
 
-       <div class="jumbotron" data-ng-hide="model.loggedIn">
-         <form class="form-signin">
-           <h2 class="form-signin-heading text-muted">Sign In Here</h2>
-           <input type="text" placeholder="Username" data-ng-model="model.username" class="form-control" required autofocus="autofocus"/>
-           <button id="pseudoSet" class="btn btn-lg btn-success btn-block" data-ng-click="login()">Login</button>
-         </form>
-       </div>
+    <!-- Bootstrap core CSS -->
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/lib/bootstrap/css/signin.css" rel="stylesheet" media="screen"/>
 
-       <div class="alert alert-danger" data-ng-show="model.showErrorMessage"><span class="glyphicon glyphicon-ban-circle"></span>&nbsp;{{ model.errorMessage }}</div>
+    <!-- Custom styles for this template -->
+    <link href="/style/css/offcanvas.css" rel="stylesheet">
 
-       <div data-ng-show="model.loggedIn">
+    <link href="/style/css/cards.css" rel="stylesheet" media="screen"/>
+    <link href="/style/css/voter.css" rel="stylesheet" media="screen"/>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/lib/jquery/html5shiv.js"></script>
+    <script src="/lib/jquery/respond.min.js"></script>
+    <![endif]-->
+</head>
 
-           <div class="row marketing" >
-              <h4 id="welcome" class="text-muted">Welcome {{ model.username }}</h4>
-               <div class="alert alert-info" data-ng-hide="model.votingOpen"><span class="glyphicon glyphicon-time"></span> &nbsp;{{ model.statusMessage }}</div>
+<body>
 
 
-              <div data-ng-show="model.votingOpen">
-
-                  <div class="alert alert-info" data-ng-show="model.showCurrentVote">
-                      <span class="glyphicon glyphicon-tag"></span>
-                      Current Vote: {{ model.currentVote }}
-                  </div>
-                  <div class="alert alert-success" data-ng-show="model.showVoteSentMessage">
-                      <span class="glyphicon glyphicon-ok-circle"></span>
-                      {{ model.voteSentMessage }}
-                  </div>
-
-                  <div id="votingOptions">
-                      <div data-ng-repeat="option in votingModel.defaultVotingOption.values">
-                          <div class="card-large" data-ng-click="sendVote(option)">{{ option }}</div>
-                      </div>
-                  </div>
-              </div>
-
-           </div>
+<div class="container voter" data-ng-controller="ClientController" data-ng-init='init(<%-JSON.stringify(users) %>)'>
 
 
-           <div class="panel panel-default">
-               <div class="panel-heading">
-                   <h3 class="panel-title" id="summaryTitle">Voters</h3>
-               </div>
-               <div class="panel-body">
-                   <div class="clearFix"></div>
-                   <div data-ng-controller="VotersController">
-                       <div class="card-small" data-ng-repeat="user in model.loggedInUsers | filter:filterCurrentUser">
-                           <p class="vote">
-
-                               <!-- After Reveal, User has voted -->
-                               <span data-ng-show="!model.hideVotes && model.votes[user]">{{ model.votes[user] }}</span>
-
-                               <!-- After Reveal, User has abstained -->
-                               <span data-ng-show="!model.hideVotes && !model.votes[user]" class="glyphicon glyphicon-ban-circle"></span>
-
-                               <!-- Before Reveal, user has not voted yet -->
-                               <span data-ng-show="model.hideVotes && !model.votes[user]" class="glyphicon glyphicon-time"></span>
-
-                               <!-- Before Reveal, user has voted -->
-                               <span data-ng-show="model.hideVotes && model.votes[user]"  class="glyphicon glyphicon-check"></span>
-
-                           </p>
-                           <p class="username">{{user}}</p>
-                       </div>
-                       <div class="after-card"></div>
-                   </div>
-               </div>
-           </div>
-
-
-           <div class="panel panel-default" data-ng-show="model.showSummary">
-               <div class="panel-heading">
-                   <h3 class="panel-title" id="summaryTitle">Summary</h3>
-               </div>
-               <div class="panel-body">
-                   <div class="clearFix"></div>
-                   <div>
-                       <div data-ng-repeat="summary in model.summaryText">{{ summary }}</div>
-                   </div>
-               </div>
-           </div>
-
-           <br />
-           <div class="panel panel-default" data-ng-show="model.showVoteLog">
-               <div class="panel-heading">
-                   <h3 class="panel-title">Voting Results Log</h3>
-               </div>
-               <div class="panel-body">
-                   <div>
-                       <div data-ng-repeat="log in model.voteLog">Final Vote for {{log.backlogNumber}} was <b>{{log.finalVote}}</b></div>
-                   </div>
-               </div>
-           </div>
-       </div>
-       
-       <div class="footer"></div>
+    <div class="jumbotron" data-ng-hide="model.loggedIn">
+        <form class="form-signin">
+            <h2 class="form-signin-heading text-muted">Sign In Here</h2>
+            <input type="text" placeholder="Username" data-ng-model="model.username" class="form-control" required autofocus="autofocus"/>
+            <button id="pseudoSet" class="btn btn-lg btn-success btn-block" data-ng-click="login()">Login</button>
+        </form>
+        <div class="alert alert-danger" data-ng-show="model.showErrorMessage"><span class="glyphicon glyphicon-ban-circle"></span>&nbsp;{{ model.errorMessage }}</div>
     </div>
-    
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="/lib/jquery/jquery-ui-1.10.3.custom.min.js"></script>
-    <script type="text/javascript" src="/lib/bootstrap/js/bootstrap.js"></script>
-    <script type="text/javascript" src="/lib/angular/angular.min.js"></script>
-    <script type="text/javascript" src="/app/PlanningApp.js"></script>
-    <script type="text/javascript" src="/app/factory/socket.js"></script>
-    <script type="text/javascript" src="/app/factory/ClientModel.js"></script>
-    <script type="text/javascript" src="/app/factory/VotingModel.js"></script>
-    <script type="text/javascript" src="/app/controller/ClientController.js"></script>
-    <script type="text/javascript" src="/app/controller/VotersController.js"></script>
-  </body>
+
+
+    <div class="row row-offcanvas row-offcanvas-right" data-ng-show="model.loggedIn">
+
+        <div class="col-xs-12 col-sm-9">
+            <p class="pull-right visible-xs">
+                <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Details</button>
+            </p>
+            <div class="jumbotron">
+                <h1>Welcome {{ model.username }}</h1>
+                <p>This is an example to show the potential of an offcanvas layout pattern in Bootstrap. Try some responsive-range viewport sizes to see it in action.</p>
+
+            </div>
+            <div class="alert alert-info" data-ng-hide="model.votingOpen"><span class="glyphicon glyphicon-time"></span> &nbsp;{{ model.statusMessage }}</div>
+
+            <div data-ng-show="model.votingOpen">
+
+                <div class="alert alert-info" data-ng-show="model.showCurrentVote">
+                    <span class="glyphicon glyphicon-tag"></span>
+                    Current Vote: {{ model.currentVote }}
+                </div>
+                <div class="alert alert-success" data-ng-show="model.showVoteSentMessage">
+                    <span class="glyphicon glyphicon-ok-circle"></span>
+                    {{ model.voteSentMessage }}
+                </div>
+
+                <div id="votingOptions">
+                    <div data-ng-repeat="option in votingModel.defaultVotingOption.values">
+                        <div class="card-large" data-ng-click="sendVote(option)">{{ option }}</div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div><!--/span-->
+
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title" id="summaryTitle">Voters</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="clearFix"></div>
+                    <div data-ng-controller="VotersController">
+                        <div class="card-small" data-ng-repeat="user in model.loggedInUsers | filter:filterCurrentUser">
+                            <p class="vote">
+
+                                <!-- After Reveal, User has voted -->
+                                <span data-ng-show="!model.hideVotes && model.votes[user]">{{ model.votes[user] }}</span>
+
+                                <!-- After Reveal, User has abstained -->
+                                <span data-ng-show="!model.hideVotes && !model.votes[user]" class="glyphicon glyphicon-ban-circle"></span>
+
+                                <!-- Before Reveal, user has not voted yet -->
+                                <span data-ng-show="model.hideVotes && !model.votes[user]" class="glyphicon glyphicon-time"></span>
+
+                                <!-- Before Reveal, user has voted -->
+                                <span data-ng-show="model.hideVotes && model.votes[user]"  class="glyphicon glyphicon-check"></span>
+
+                            </p>
+                            <p class="username">{{user}}</p>
+                        </div>
+                        <div class="after-card"></div>
+                    </div>
+                </div>
+            </div>
+
+            <br />
+            <div class="panel panel-default" data-ng-show="model.showVoteLog">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Voting Results Log</h3>
+                </div>
+                <div class="panel-body">
+                    <div>
+                        <div data-ng-repeat="log in model.voteLog">Final Vote for {{log.backlogNumber}} was <b>{{log.finalVote}}</b></div>
+                    </div>
+                </div>
+            </div>
+        </div><!--/span-->
+    </div><!--/row-->
+
+    <hr>
+
+    <footer>
+        <p>&copy; Company 2013</p>
+    </footer>
+
+</div><!--/.container-->
+
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript" src="/lib/angular/angular.min.js"></script>
+<script type="text/javascript" src="/app/PlanningApp.js"></script>
+<script type="text/javascript" src="/app/factory/socket.js"></script>
+<script type="text/javascript" src="/app/factory/ClientModel.js"></script>
+<script type="text/javascript" src="/app/factory/VotingModel.js"></script>
+<script type="text/javascript" src="/app/controller/ClientController.js"></script>
+<script type="text/javascript" src="/app/controller/VotersController.js"></script>
+<script>
+    $(document).ready(function() {
+        $('[data-toggle=offcanvas]').click(function() {
+            $('.row-offcanvas').toggleClass('active');
+        });
+    });
+</script>
+</body>
 </html>
