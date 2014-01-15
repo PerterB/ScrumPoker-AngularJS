@@ -137,7 +137,8 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 		var finalVoteObj = {
             backlogNumber: $scope.model.backlogNumber,
             finalVote: $scope.model.finalVoteValue
-        };
+        }, thisBacklog;
+		
 		$scope.model.voteLog.push(finalVoteObj);
 		localStorage['voteLog'] = JSON.stringify($scope.model.voteLog);
 
@@ -147,9 +148,16 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
             for (var i = 0; i < $scope.model.preparedBacklogs.length; i++) {
                 if ($scope.model.backlogNumber === $scope.model.preparedBacklogs[i].id) {
                     $scope.model.preparedBacklogs[i].finalVoteValue = $scope.model.finalVoteValue;
+					thisBacklog = $scope.model.preparedBacklogs[i];
                     break;
                 }
             }
+			
+			socket.emit('backlogReadyRequest', {
+				backlogId: thisBacklog.assetId.split(':')[1], 
+				estimate: $scope.model.finalVoteValue, 
+				status: 'Sprint Ready'
+			});
         }
 
 

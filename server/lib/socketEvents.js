@@ -190,7 +190,20 @@ module.exports = (function() {
     	socket.broadcast.to(socket.room).emit('backlogResponse', data);
     	
     };
+	
+	var backlogReadyRequestEvent = function(backlogData) {
+		
+		var socket = this;
+		
+		socket.broadcast.to(socket.room).emit('backlogReadyRequest', backlogData);
+	};
     
+	var backlogReadyResponseEvent = function() {
+		var socket = this;
+		
+		socket.broadcast.to(socket.room).emit('backlogReadyResponse');
+	};
+	
     /**
 	 * Mapping of event name to handlers
 	 */
@@ -214,7 +227,11 @@ module.exports = (function() {
 	    
 	    'backlogRequest': backlogRequestEvent,
 	    
-	    'backlogResponse': backlogResponseEvent
+	    'backlogResponse': backlogResponseEvent,
+		
+		'backlogReadyRequest': backlogReadyRequestEvent,
+		
+		'backlogReadyResponse': backlogReadyResponseEvent
 	};
 	
 	return {

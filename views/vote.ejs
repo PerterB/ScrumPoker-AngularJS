@@ -52,7 +52,7 @@
             <div class="jumbotron">
                 <h1>Welcome {{ model.username }}</h1>
                 <p data-ng-show="model.backlogDetails">
-                    {{model.backlogDetails.id}}
+                    Currently Voting on: <a href="{{model.backlogDetails.href}}" target="_new">{{model.backlogDetails.id}}</a>
                     <br />
                     {{model.backlogDetails.title}}
                     <br />
