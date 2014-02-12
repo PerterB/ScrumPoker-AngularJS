@@ -69,6 +69,15 @@ describe('ScrumMasterController Tests', function() {
         expect(socket.emit).toHaveBeenCalledWith('backlogRequest');
     });
 
+    it('should request scopes from a provider on connect', function() {
+
+        window.location.pathname = '/some/room';
+
+        scope.onConnect();
+
+        expect(socket.emit).toHaveBeenCalledWith('scopesRequest');
+    });
+
     it('should update the list of users when someone logs in', function() {
 
         scope.model.loggedInUsers = [];

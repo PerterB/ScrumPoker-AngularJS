@@ -182,7 +182,11 @@ module.exports = (function() {
     	socket.broadcast.to(socket.room).emit('backlogRequest');
     	
     };
-    
+
+    /**
+     * When the provider returns a list of backlogs.
+     * @param data
+     */
     var backlogResponseEvent = function(data) {
     	
     	var socket = this;
@@ -190,19 +194,44 @@ module.exports = (function() {
     	socket.broadcast.to(socket.room).emit('backlogResponse', data);
     	
     };
-	
+
+    /**
+     * Request that a backlog is set to ready?
+     * @param backlogData
+     */
 	var backlogReadyRequestEvent = function(backlogData) {
 		
 		var socket = this;
 		
 		socket.broadcast.to(socket.room).emit('backlogReadyRequest', backlogData);
 	};
-    
+
+    /**
+     * Confirm that backlog is set to ready.
+     */
 	var backlogReadyResponseEvent = function() {
 		var socket = this;
 		
 		socket.broadcast.to(socket.room).emit('backlogReadyResponse');
 	};
+
+    /**
+     * When the app loads, request a list of scopes from the provider
+     */
+    var scopesRequestEvent = function() {
+        var socket = this;
+
+        socket.broadcast.to(socket.room).emit('scopesRequest');
+    };
+
+    /**
+     * When the provider returns a list of scopes
+     */
+    var scopesResponseEvent = function(scopes) {
+        var socket = this;
+
+        socket.broadcast.to(socket.room).emit('scopesResponse', scopes);
+    };
 	
     /**
 	 * Mapping of event name to handlers
@@ -231,7 +260,11 @@ module.exports = (function() {
 		
 		'backlogReadyRequest': backlogReadyRequestEvent,
 		
-		'backlogReadyResponse': backlogReadyResponseEvent
+		'backlogReadyResponse': backlogReadyResponseEvent,
+
+        'scopesRequest': scopesRequestEvent,
+
+        'scopesResponse': scopesResponseEvent
 	};
 	
 	return {

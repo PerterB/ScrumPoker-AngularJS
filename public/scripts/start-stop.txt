@@ -1,0 +1,3 @@
+nodejs ./node_modules/forever/bin/forever start index.js
+
+git clone git@github.com:/PerterB/ScrumPoker-AngularJS

@@ -23,6 +23,9 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
             //join the room
             socket.emit('room', room);
 
+            //TODO: Request list of scopes....
+            socket.emit('scopesRequest');
+
             //request backlogs
             socket.emit('backlogRequest');
         }
@@ -74,12 +77,20 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
         $scope.model.simpleMode = false;
     };
 
+    /**
+     * When the provider returns a list of scopes
+     */
+    $scope.onScopesResponse = function(scopes) {
+        $scope.model.scopes = scopes;
+        $scope.model.simpleMode = false;
+    };
 
     //SOCKET EVENTS
     socket.on('connect', $scope.onConnect);
     socket.on('login', $scope.onLogin);
     socket.on('logout', $scope.onLogout);
     socket.on('vote', $scope.onVote);
+    socket.on('scopesResponse', $scope.onScopesResponse);
     socket.on('backlogResponse', $scope.onBacklogResponse);
 
     /**
