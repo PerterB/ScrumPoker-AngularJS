@@ -1,95 +1,102 @@
 <!doctype html>
 <html data-ng-app="planningApp">
-  <head>
+<head>
     <title>Scrum Master</title>`
-    
-      <link href="/lib/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"/>
-      <link href="/lib/bootstrap/css/bootstrap-theme.css" rel="stylesheet" media="screen"/>
-      <link href="/lib/bootstrap/css/jumbotron-narrow.css" rel="stylesheet" media="screen"/>
-      
-      <link href="/style/css/cards.css" rel="stylesheet" media="screen"/>
-      <link href="/style/css/scrummaster.css" rel="stylesheet" media="screen"/>
 
-      <!--[if lt IE 9]>
-      <script src="/lib/jquery/html5shiv.js"></script>
-      <script src="/lib/jquery/respond.min.js"></script>
-      <![endif]-->
-  </head>
-  <body>
+    <link href="/lib/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"/>
+    <link href="/lib/bootstrap/css/bootstrap-theme.css" rel="stylesheet" media="screen"/>
+    <link href="/lib/bootstrap/css/jumbotron-narrow.css" rel="stylesheet" media="screen"/>
 
-    <div class="container scrummaster" data-ng-controller="ScrumMasterController"
-         data-ng-init='init(<%-JSON.stringify(users) %>)'>
-       <div class="header">
-          <h3 class="text-muted">Scrum Master</h3>
-       </div>
+    <link href="/style/css/cards.css" rel="stylesheet" media="screen"/>
+    <link href="/style/css/scrummaster.css" rel="stylesheet" media="screen"/>
 
-      <div data-ng-controller="VotersController">
-          <div class="card-large" data-user="{{user}}" data-ng-repeat="user in model.loggedInUsers">
-              <p class="vote">
+    <!--[if lt IE 9]>
+    <script src="/lib/jquery/html5shiv.js"></script>
+    <script src="/lib/jquery/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
 
-                  <!-- After Reveal, User has voted -->
-                  <span data-ng-show="!model.hideVotes && model.votes[user]">{{ model.votes[user] }}</span>
+<div class="container scrummaster" data-ng-controller="ScrumMasterController"
+     data-ng-init='init(<%- JSON.stringify(users) %>)'>
+    <div class="header">
+        <h3 class="text-muted">Scrum Master</h3>
+    </div>
 
-                  <!-- After Reveal, User has abstained -->
+    <div data-ng-controller="VotersController">
+        <div class="card-large" data-user="{{user}}" data-ng-repeat="user in model.loggedInUsers">
+            <p class="vote">
+
+                <!-- After Reveal, User has voted -->
+                <span data-ng-show="!model.hideVotes && model.votes[user]">{{ model.votes[user] }}</span>
+
+                <!-- After Reveal, User has abstained -->
                   <span data-ng-show="!model.hideVotes && !model.votes[user]"
                         class="glyphicon glyphicon-ban-circle"></span>
 
-                  <!-- Before Reveal, user has not voted yet -->
+                <!-- Before Reveal, user has not voted yet -->
                   <span data-ng-show="model.hideVotes && !model.votes[user]"
                         class="glyphicon glyphicon-time"></span>
 
-                  <!-- Before Reveal, user has voted -->
+                <!-- Before Reveal, user has voted -->
                   <span data-ng-show="model.hideVotes && model.votes[user]"
                         class="glyphicon glyphicon-check"></span>
 
-              </p>
-              <p class="username">{{user}}</p>
-          </div>
-          <div class="after-card"></div>
-      </div>
+            </p>
+
+            <p class="username">{{user}}</p>
+        </div>
+        <div class="after-card"></div>
+    </div>
 
 
-      <!-- Simple Mode Buttons -->
-      <p>
-         <button data-toggle="modal" data-target="#newVoteModal" class="btn btn-default"
-                 data-ng-show="model.simpleMode">New Vote</button>
-         <button class="btn btn-default" data-ng-click="revealVotes()"
-                 data-ng-disabled="model.disableReveal">Reveal Votes</button>
-      </p>
+    <!-- Simple Mode Buttons -->
+    <p>
+        <button data-toggle="modal" data-target="#newVoteModal" class="btn btn-default"
+                data-ng-show="model.simpleMode">New Vote
+        </button>
+        <button class="btn btn-default" data-ng-click="revealVotes()"
+                data-ng-disabled="model.disableReveal">Reveal Votes
+        </button>
+    </p>
 
-      <br />
-      <div class="panel panel-default" data-ng-hide="model.hideSummary">
-         <div class="panel-heading">
+    <br/>
+
+    <div class="panel panel-default" data-ng-hide="model.hideSummary">
+        <div class="panel-heading">
             <h3 class="panel-title" id="summaryTitle">Summary</h3>
-         </div>
-         <div class="panel-body">
+        </div>
+        <div class="panel-body">
             <div class="btn-group pull-right">
-               <button data-toggle="modal" data-target="#finalVoteModal" id="finalVote"
-                       class="btn btn-default">Final Vote</button>
+                <button data-toggle="modal" data-target="#finalVoteModal" id="finalVote"
+                        class="btn btn-default">Final Vote
+                </button>
             </div>
             <div class="clearFix"></div>
             <div>
-               <div data-ng-repeat="summary in model.summaryText">{{ summary }}</div>
+                <div data-ng-repeat="summary in model.summaryText">{{ summary }}</div>
             </div>
-         </div>
-      </div>
+        </div>
+    </div>
 
 
-      <!-- Scope Selector -->
-      <div ng-hide="model.simpleMode">
-      Scopes:
+    <!-- Scope Selector -->
+    <div class="form-group" ng-hide="model.simpleMode" style="width:200px">
+        <label>Select Scope</label>
         <select class="form-control" data-ng-model="model.currentScope" data ng-options="c.name for c in model.scopes">
         </select>
-      </div>
+    </div>
 
-      <!-- Backlog Provider -->
-	  <div data-ng-repeat="backlog in model.preparedBacklogs" ng-class="{completedVoting:backlog.finalVoteValue,currentlyVoting:model.currentBacklog==backlog.id}" class="list-group-item">
+    <!-- Backlog Provider -->
+    <div data-ng-repeat="backlog in model.preparedBacklogs"
+         ng-class="{completedVoting:backlog.finalVoteValue,currentlyVoting:model.currentBacklog==backlog.id}"
+         class="list-group-item">
 
-	     <div class="btn-group pull-right">
+        <div class="btn-group pull-right">
 
-             <div class="dropdown">
+            <div class="dropdown">
 
-                 <ul class="nav nav-pills">
+                <ul class="nav nav-pills">
                     <li class="dropdown">
 
                         <a id="actionsMenu{{$index}}" data-toggle="dropdown" href="#">
@@ -116,27 +123,28 @@
                         </ul>
 
                     </li>
-                 </ul>
+                </ul>
 
-             </div>
+            </div>
 
-	     </div>
+        </div>
 
-	     <h4 class="list-group-item-heading"><a href="{{backlog.href}}" target="_new">{{backlog.id}}</a></h4>
-	     <p class="list-group-item-text">{{backlog.title}}</p>
+        <h4 class="list-group-item-heading"><a href="{{backlog.href}}" target="_new">{{backlog.id}}</a></h4>
 
-	  </div>
+        <p class="list-group-item-text">{{backlog.title}}</p>
+
+    </div>
 
 
+    <br/>
 
-	  <br />
-      <div class="panel panel-default">
-         <div class="panel-heading">
+    <div class="panel panel-default">
+        <div class="panel-heading">
             <h3 class="panel-title">Voting Results Log</h3>
-         </div>
-         <div class="panel-body">
+        </div>
+        <div class="panel-body">
             <div class="btn-group pull-right">
-               <button class="btn btn-default" data-ng-click="clearLog()">Clear Log</button>
+                <button class="btn btn-default" data-ng-click="clearLog()">Clear Log</button>
             </div>
             <div class="clearFix"></div>
             <div>
@@ -144,77 +152,79 @@
                     Final Vote for {{log.backlogNumber}} was <b>{{log.finalVote}}</b>
                 </div>
             </div>
-         </div>
-      </div>
+        </div>
+    </div>
 
-      <div class="alert alert-success">
-          <h3 class="text-muted">Options</h3>
-          <label>Invite Users to the following URL:</label>
-          <input type="text" class="form-control" value="{{votingUrl}}" readonly/>
-      </div>
-      <br />
+    <div class="alert alert-success">
+        <h3 class="text-muted">Options</h3>
+        <label>Invite Users to the following URL:</label>
+        <input type="text" class="form-control" value="{{votingUrl}}" readonly/>
+    </div>
+    <br/>
 
-       <div role="dialog" aria-hidden="true" id="newVoteModal" class="modal fade" clear-on-show="backlogText">
-          <div class="modal-dialog">
-             <div class="modal-content">
+    <div role="dialog" aria-hidden="true" id="newVoteModal" class="modal fade" clear-on-show="backlogText">
+        <div class="modal-dialog">
+            <div class="modal-content">
                 <div class="modal-header">
-                   <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
-                   <h4 class="modal-title">New Vote</h4>
+                    <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+                    <h4 class="modal-title">New Vote</h4>
                 </div>
                 <div class="modal-body">
-                   <input type="text" placeholder="Backlog Number" required="required" autofocus="autofocus"
-                          class="form-control" data-ng-model="model.backlogNumber" enter-close="newVoteModal"
-                          on-close="beginVote()" id="backlogText"/>
+                    <input type="text" placeholder="Backlog Number" required="required" autofocus="autofocus"
+                           class="form-control" data-ng-model="model.backlogNumber" enter-close="newVoteModal"
+                           on-close="beginVote()" id="backlogText"/>
                 </div>
                 <div class="modal-footer">
-                   <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
-                   <button type="button" data-ng-click="beginVote()"
-                           data-dismiss="modal" class="btn btn-primary">Begin Vote</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+                    <button type="button" data-ng-click="beginVote()"
+                            data-dismiss="modal" class="btn btn-primary">Begin Vote
+                    </button>
                 </div>
-             </div>
-          </div>
-       </div>
-
-
-       <div role="dialog" aria-hidden="true" id="finalVoteModal" class="modal fade" clear-on-show="finalVoteValue">
-          <div class="modal-dialog">
-             <div class="modal-content">
-                  <div class="modal-header">
-                     <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
-                     <h4 class="modal-title">Final Vote: {{model.backlogNumber}}</h4>
-                  </div>
-                  <div class="modal-body">
-
-                      <label for="disabledTextInput">Final Vote Value</label>
-                      <select class="form-control" data-ng-model="model.finalVoteValue">
-                          <option>---</option>
-                          <option data-ng-repeat="option in model.defaultVotingOption.values">{{option}}</option>
-                      </select>
-
-                  </div>
-                  <div class="modal-footer">
-                     <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
-                     <button type="button" data-dismiss="modal" class="btn btn-primary"
-                             data-ng-click="saveVote()">Save</button>
-                  </div>
-             </div>
-          </div>
-       </div>
-       
+            </div>
+        </div>
     </div>
-    
-    
-    <script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="/lib/jquery/jquery-ui-1.10.3.custom.min.js"></script>
-    <script type="text/javascript" src="/lib/bootstrap/js/bootstrap.js"></script>
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script src="/lib/angular/angular.min.js"></script>
-    <script type="text/javascript" src="/lib/angular/angular-sanitize.min.js"></script>
-    <script src="/app/PlanningApp.js"></script>
-    <script src="/app/directives/modalDirectives.js"></script>
-    <script src="/app/factory/socket.js"></script>
-    <script src="/app/factory/VotingModel.js"></script>
-    <script src="/app/controller/ScrumMasterController.js"></script>
-    <script src="/app/controller/VotersController.js"></script>
-  </body>
+
+
+    <div role="dialog" aria-hidden="true" id="finalVoteModal" class="modal fade" clear-on-show="finalVoteValue">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+                    <h4 class="modal-title">Final Vote: {{model.backlogNumber}}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <label for="disabledTextInput">Final Vote Value</label>
+                    <select class="form-control" data-ng-model="model.finalVoteValue">
+                        <option>---</option>
+                        <option data-ng-repeat="option in model.defaultVotingOption.values">{{option}}</option>
+                    </select>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-primary"
+                            data-ng-click="saveVote()">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript" src="/lib/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script src="/lib/angular/angular.min.js"></script>
+<script type="text/javascript" src="/lib/angular/angular-sanitize.min.js"></script>
+<script src="/app/PlanningApp.js"></script>
+<script src="/app/directives/modalDirectives.js"></script>
+<script src="/app/factory/socket.js"></script>
+<script src="/app/factory/VotingModel.js"></script>
+<script src="/app/controller/ScrumMasterController.js"></script>
+<script src="/app/controller/VotersController.js"></script>
+</body>
 </html>

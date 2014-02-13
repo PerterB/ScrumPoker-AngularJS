@@ -25,7 +25,8 @@ describe('ScrumMasterController Tests', function() {
     beforeEach(inject(function($controller) {
 
         scope = {
-            $on: jasmine.createSpy()
+            $on: jasmine.createSpy(),
+            $watch: jasmine.createSpy()
         };
         window = {
             location: {}
@@ -50,7 +51,6 @@ describe('ScrumMasterController Tests', function() {
 
     });
 
-    //TODO: what if no room?
     it('should join the room on connect', function() {
 
         window.location.pathname = '/some/room';
@@ -111,8 +111,6 @@ describe('ScrumMasterController Tests', function() {
             name: 'Branch'
         }];
 
-        scope.$watch = function() {};
-
         scope.onScopesResponse(scopes);
 
         expect(scope.model.scopes).toEqual(scopes);
@@ -128,12 +126,55 @@ describe('ScrumMasterController Tests', function() {
             name: 'Branch'
         }];
 
-        scope.$watch = jasmine.createSpy();
-
         scope.onScopesResponse(scopes);
 
         expect(scope.$watch).toHaveBeenCalled();
-        //TODO capture the handler and test it.
+    });
+
+    it('should request backlogs after the scope changes', function() {
+        var scopes = [{
+            scopeId: 12345,
+            name: 'Trunk'
+        }, {
+            scopeId: 54321,
+            name: 'Branch'
+        }];
+
+        scope.model = {
+            currentScope: 'currentScope'
+        };
+        scope.onScopesResponse(scopes);
+
+        expect(scope.$watch).toHaveBeenCalled();
+        expect(scope.$watch.mostRecentCall.args[0]).toEqual('model.currentScope');
+
+        var watchFn = scope.$watch.mostRecentCall.args[1];
+        watchFn('test');
+
+        expect(socket.emit).toHaveBeenCalledWith('backlogRequest', 'currentScope');
+    });
+
+    it('should not request backlogs if the scope does not change', function() {
+        var scopes = [{
+            scopeId: 12345,
+            name: 'Trunk'
+        }, {
+            scopeId: 54321,
+            name: 'Branch'
+        }];
+
+        scope.model = {
+            currentScope: 'currentScope'
+        };
+        scope.onScopesResponse(scopes);
+
+        expect(scope.$watch).toHaveBeenCalled();
+        expect(scope.$watch.mostRecentCall.args[0]).toEqual('model.currentScope');
+
+        var watchFn = scope.$watch.mostRecentCall.args[1];
+        watchFn()
+
+        expect(socket.emit).not.toHaveBeenCalledWith('backlogRequest', 'currentScope');
     });
 
     it('should receive backlogs from a provider', function() {
@@ -150,11 +191,9 @@ describe('ScrumMasterController Tests', function() {
         scope.model.backlogNumber = 'B-1234'
         scope.model.defaultVotingOption = {name: 'test', values: [0,1,2,3]};
 
-
         scope.beginVote();
 
         expect(socket.emit).toHaveBeenCalledWith('beginVote', 'B-1234', [0,1,2,3]);
-
 
         expect(scope.model.currentBacklog).toEqual('B-1234');
         expectReset();
@@ -174,7 +213,7 @@ describe('ScrumMasterController Tests', function() {
         var backlogNumber = 'B-54321';
         scope.model.defaultVotingOption = {name: 'test', values: [0,1,2,3]};
 
-        scope.beginBacklogVote({id: backlogNumber});   //todo: why is this an id property? from provider i guess
+        scope.beginBacklogVote({id: backlogNumber});
 
         expect(scope.model.currentBacklog).toEqual('B-54321');
         expectReset();
