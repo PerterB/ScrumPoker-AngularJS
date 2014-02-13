@@ -175,11 +175,11 @@ module.exports = (function() {
     /**
      * Broadcast a request for backlog items
      */
-    var backlogRequestEvent = function() {
+    var backlogRequestEvent = function(scope) {
     	
     	var socket = this;
     	
-    	socket.broadcast.to(socket.room).emit('backlogRequest');
+    	socket.broadcast.to(socket.room).emit('backlogRequest', scope);
     	
     };
 

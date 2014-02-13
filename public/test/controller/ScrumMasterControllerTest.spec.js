@@ -60,15 +60,6 @@ describe('ScrumMasterController Tests', function() {
         expect(socket.emit).toHaveBeenCalledWith('room', 'room');
     });
 
-    it('should request backlogs from a provider on connect', function() {
-
-        window.location.pathname = '/some/room';
-
-        scope.onConnect();
-
-        expect(socket.emit).toHaveBeenCalledWith('backlogRequest');
-    });
-
     it('should request scopes from a provider on connect', function() {
 
         window.location.pathname = '/some/room';
@@ -109,6 +100,40 @@ describe('ScrumMasterController Tests', function() {
         scope.onVote();
 
         expect(scope.model.disableReveal).toEqual(false);
+    });
+
+    it('should receive scopes from a provider', function() {
+        var scopes = [{
+            scopeId: 12345,
+            name: 'Trunk'
+        }, {
+            scopeId: 54321,
+            name: 'Branch'
+        }];
+
+        scope.$watch = function() {};
+
+        scope.onScopesResponse(scopes);
+
+        expect(scope.model.scopes).toEqual(scopes);
+        expect(scope.model.simpleMode).toBe(false);
+    });
+
+    it('should watch the current scope after receiving scopes from a provider', function() {
+        var scopes = [{
+            scopeId: 12345,
+            name: 'Trunk'
+        }, {
+            scopeId: 54321,
+            name: 'Branch'
+        }];
+
+        scope.$watch = jasmine.createSpy();
+
+        scope.onScopesResponse(scopes);
+
+        expect(scope.$watch).toHaveBeenCalled();
+        //TODO capture the handler and test it.
     });
 
     it('should receive backlogs from a provider', function() {

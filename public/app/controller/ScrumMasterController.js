@@ -23,11 +23,8 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
             //join the room
             socket.emit('room', room);
 
-            //TODO: Request list of scopes....
+            // request a list of available scopes
             socket.emit('scopesRequest');
-
-            //request backlogs
-            socket.emit('backlogRequest');
         }
     };
 
@@ -81,8 +78,19 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
      * When the provider returns a list of scopes
      */
     $scope.onScopesResponse = function(scopes) {
-        $scope.model.scopes = scopes;
-        $scope.model.simpleMode = false;
+        if (scopes) {
+            $scope.model.scopes = scopes;
+            $scope.model.simpleMode = false;
+
+            // watch the currentScope model value for changes
+            // request a list of backlogs for the selected scope on select
+            $scope.$watch('model.currentScope', function(newValue) {
+                if (newValue) {
+                    socket.emit('backlogRequest', $scope.model.currentScope);
+                }
+            });
+        }
+
     };
 
     //SOCKET EVENTS
@@ -163,12 +171,14 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
                     break;
                 }
             }
-			
-			socket.emit('backlogReadyRequest', {
-				backlogId: thisBacklog.assetId.split(':')[1], 
-				estimate: $scope.model.finalVoteValue, 
-				status: 'Sprint Ready'
-			});
+			if (thisBacklog) {
+                socket.emit('backlogReadyRequest', {
+                    backlogId: thisBacklog.assetId.split(':')[1],
+                    estimate: $scope.model.finalVoteValue,
+                    status: 'Sprint Ready'
+                });
+            }
+
         }
 
 
