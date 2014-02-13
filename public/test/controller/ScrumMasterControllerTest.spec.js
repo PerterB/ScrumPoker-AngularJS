@@ -187,6 +187,7 @@ describe('ScrumMasterController Tests', function() {
     it('should set the final voteValue on the current backlog if there are prepared backlogs', function() {
 
         var preparedBacklogs = [{
+            assetId: 'Asset:12345',
             id: 'B-12345',
             title: 'First'
         }];
@@ -198,6 +199,8 @@ describe('ScrumMasterController Tests', function() {
 
         scope.saveVote();
 
+        //expect(socket.emit).toHaveBeenCalledWith('backlogReadyRequest', {backlogNumber: 'B-12345', finalVote: '13', status: 'Sprint Ready'});
+
         expect(scope.model.preparedBacklogs[0].finalVoteValue).toEqual('13');
 
     });
@@ -206,9 +209,11 @@ describe('ScrumMasterController Tests', function() {
 
         var preparedBacklogs = [{
             id: 'B-12345',
+            assetId: 'Asset:12345',
             title: 'First'
         }, {
             id: 'B-54321',
+            assetId:'Asset:54321',
             title: 'Second'
         }];
 
@@ -223,8 +228,6 @@ describe('ScrumMasterController Tests', function() {
         expect(scope.model.preparedBacklogs[1].finalVoteValue).toBeUndefined();
 
     });
-
-    //TODO: saveBacklog Tests
 
     it('should clear the log', function() {
 
