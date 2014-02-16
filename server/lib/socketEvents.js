@@ -232,6 +232,40 @@ module.exports = (function() {
 
         socket.broadcast.to(socket.room).emit('scopesResponse', scopes);
     };
+
+    /**
+     * Broadcast a request for statuses
+     */
+    var statusRequestEvent = function(scope) {
+
+        var socket = this;
+
+        socket.broadcast.to(socket.room).emit('statusRequest', scope);
+
+    };
+
+    /**
+     * When the provider returns a list of statuses.
+     * @param data
+     */
+    var statusResponseEvent = function(data) {
+
+        var socket = this;
+
+        socket.broadcast.to(socket.room).emit('statusResponse', data);
+
+    };
+
+    /**
+     * Change the Status of a backlog
+     * @param data - Object containing statusName and backlogNumber
+     */
+    var changeStatusEvent = function(data) {
+
+        var socket = this;
+
+        socket.broadcast.to(socket.room).emit('changeStatus', data);
+    };
 	
     /**
 	 * Mapping of event name to handlers
@@ -264,7 +298,13 @@ module.exports = (function() {
 
         'scopesRequest': scopesRequestEvent,
 
-        'scopesResponse': scopesResponseEvent
+        'scopesResponse': scopesResponseEvent,
+
+        'statusRequest' : statusRequestEvent,
+
+        'statusResponse' : statusResponseEvent,
+
+        'changeStatus' : changeStatusEvent
 	};
 	
 	return {

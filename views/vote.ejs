@@ -19,6 +19,7 @@
     <link href="/style/css/offcanvas.css" rel="stylesheet">
 
     <link href="/style/css/cards.css" rel="stylesheet" media="screen"/>
+    <link rel="stylesheet" media="(max-width: 480px)" href="/style/css/cards-phone.css" />
     <link href="/style/css/voter.css" rel="stylesheet" media="screen"/>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -50,13 +51,32 @@
                 <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Details</button>
             </p>
             <div class="jumbotron">
-                <h1>Welcome {{ model.username }}</h1>
+                <h2>Welcome {{ model.username }}</h2>
                 <p data-ng-show="model.backlogDetails">
-                    Currently Voting on: <a href="{{model.backlogDetails.href}}" target="_new">{{model.backlogDetails.id}}</a>
-                    <br />
+                    You are currently voting on: <a href="{{model.backlogDetails.href}}" target="_new">{{model.backlogDetails.id}}</a>
+                    <br /><br />
                     {{model.backlogDetails.title}}
                     <br />
-                    <div data-ng-show="model.backlogDetails.description" data-ng-bind-html="model.backlogDetails.description" class="well" style="height: 300px; overflow: auto"></div>
+
+
+                    <div class="panel-group" id="accordion" data-ng-show="model.backlogDetails">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                        Details
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                                <div class="panel-body" data-ng-show="model.backlogDetails.description" data-ng-bind-html="model.backlogDetails.description" style="height: 300px; overflow: auto; font-size: 12pt">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </p>
 
             </div>
@@ -129,11 +149,6 @@
         </div><!--/span-->
     </div><!--/row-->
 
-    <hr>
-
-    <footer>
-        <p>&copy; Company 2013</p>
-    </footer>
 
 </div><!--/.container-->
 

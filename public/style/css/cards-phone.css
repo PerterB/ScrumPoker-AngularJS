@@ -1,0 +1,36 @@
+.card-small {
+    float: left;
+    width: 50px;
+    height: 40px;
+    margin: 3px;
+    color: #666;
+    border: 1px solid #ddd;
+    font-size: 15px;
+    text-align: center;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+.card-large {
+    float: left;
+    width: 100px;
+    height: 70px;
+    margin: 3px;
+    color: #666;
+    border: 1px solid #ddd;
+    font-size: 28px;
+    text-align: center;
+    cursor:pointer;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.card-large:hover {
+    background-color:#ddd;
+}
+
+.after-card {
+    clear: left;
+}

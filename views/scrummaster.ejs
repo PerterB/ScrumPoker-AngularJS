@@ -58,10 +58,11 @@
         <button class="btn btn-default" data-ng-click="revealVotes()"
                 data-ng-disabled="model.disableReveal">Reveal Votes
         </button>
+
+
     </p>
 
     <br/>
-
     <div class="panel panel-default" data-ng-hide="model.hideSummary">
         <div class="panel-heading">
             <h3 class="panel-title" id="summaryTitle">Summary</h3>
@@ -99,7 +100,7 @@
                 <ul class="nav nav-pills">
                     <li class="dropdown">
 
-                        <a id="actionsMenu{{$index}}" data-toggle="dropdown" href="#">
+                        <a id="actionsMenu{{$index}}" data-toggle="dropdown" href="#" data-ng-click="setCurrentBacklog(backlog)">
                             <span class="badge">{{backlog.finalVoteValue}}</span> Actions
                             <b class="caret"></b>
                         </a>
@@ -110,14 +111,10 @@
                                 <a href="#" class="dropdown" data-ng-click="beginBacklogVote(backlog)">Begin Vote</a>
                             </li>
 
-                            <li ng-class="{disabled:backlog.finalVoteValue===undefined}">
-                                <a href="#" class="dropdown" data-ng-click="saveBacklog(backlog)">Save</a>
-                            </li>
-
                             <li class="divider"></li>
 
                             <li>
-                                <a href="#" class="dropdown">Change Status</a>
+                                <a data-toggle="modal" data-target="#changeStatusModal" class="dropdown">Change Status</a>
                             </li>
 
                         </ul>
@@ -205,6 +202,31 @@
                     <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
                     <button type="button" data-dismiss="modal" class="btn btn-primary"
                             data-ng-click="saveVote()">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Status Dialog -->
+    <div role="dialog" aria-hidden="true" id="changeStatusModal" class="modal fade" clear-on-show="selectedStatus">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+                    <h4 class="modal-title">Change Status - {{model.currentBacklog}}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <label>Status</label>
+                    <select class="form-control" data-ng-model="model.currentStatus" data-ng-options="c.name for c in model.statuses" id="selectedStatus">
+                        <option value="">-- Select Status --</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+                    <button type="button" data-ng-click="changeBacklogStatus()"
+                            data-dismiss="modal" class="btn btn-primary">Change Status
                     </button>
                 </div>
             </div>

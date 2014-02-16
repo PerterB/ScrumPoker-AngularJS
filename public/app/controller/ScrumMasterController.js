@@ -25,6 +25,9 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 
             // request a list of available scopes
             socket.emit('scopesRequest');
+
+            //also request a list of statuses
+            socket.emit('statusRequest');
         }
     };
 
@@ -72,6 +75,9 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
     $scope.onBacklogResponse = function(backlogs) {
         $scope.model.preparedBacklogs = backlogs;
         $scope.model.simpleMode = false;
+
+        $scope.reset();
+
     };
 
     /**
@@ -90,7 +96,12 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
                 }
             });
         }
+    };
 
+    $scope.onStatusResponse = function(statuses) {
+        if (statuses) {
+            $scope.model.statuses = statuses;
+        }
     };
 
     //SOCKET EVENTS
@@ -100,6 +111,7 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
     socket.on('vote', $scope.onVote);
     socket.on('scopesResponse', $scope.onScopesResponse);
     socket.on('backlogResponse', $scope.onBacklogResponse);
+    socket.on('statusResponse', $scope.onStatusResponse);
 
     /**
      * Remove all socket listeners on destroy
@@ -116,9 +128,19 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 
 		$scope.reset();
 
+        // backlogNumber is either coming from the input element or is set in beginBacklogVote
         $scope.model.currentBacklog = $scope.model.backlogNumber;
 		socket.emit('beginVote', backlog || $scope.model.backlogNumber, $scope.model.defaultVotingOption.values);
 	};
+
+    /**
+     * Set the current backlog - called when user clicks the 'Actions' menu for a backlog.
+     * @param backlog
+     */
+    $scope.setCurrentBacklog = function(backlog) {
+        $scope.model.currentBacklog = backlog.id;
+        $scope.model.backlogNumber = backlog.id;
+    };
 
     /**
      * Helper function for resetting, called on begin vote and on saveVote
@@ -128,6 +150,7 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
         $scope.model.hideSummary = true;
         $scope.model.votes = {};
         $scope.model.disableReveal = true;
+        $scope.model.currentBacklog = undefined;
     };
 
 	$scope.beginBacklogVote = function(backlog) {
@@ -163,36 +186,33 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 
         socket.emit('finalVote', finalVoteObj);
 
-        if ($scope.model.preparedBacklogs) {
-            for (var i = 0; i < $scope.model.preparedBacklogs.length; i++) {
-                if ($scope.model.backlogNumber === $scope.model.preparedBacklogs[i].id) {
-                    $scope.model.preparedBacklogs[i].finalVoteValue = $scope.model.finalVoteValue;
-					thisBacklog = $scope.model.preparedBacklogs[i];
-                    break;
-                }
-            }
-			if (thisBacklog) {
-                socket.emit('backlogReadyRequest', {
-                    backlogId: thisBacklog.assetId.split(':')[1],
-                    estimate: $scope.model.finalVoteValue,
-                    status: 'Sprint Ready'
-                });
-            }
-
+        thisBacklog = $scope.getSelectedBacklog();
+        if (thisBacklog) {
+            thisBacklog.finalVoteValue = $scope.model.finalVoteValue;
+            socket.emit('backlogReadyRequest', {
+                backlogId: thisBacklog.assetId.split(':')[1],
+                estimate: $scope.model.finalVoteValue,
+                status: 'Sprint Ready' // TODO: really?
+            });
         }
-
 
         $scope.reset();
 	};
 
-    $scope.saveBacklog = function(backlog) {
+    /**
+     * Emit a request to update the status of the backlog.
+     */
+    $scope.changeBacklogStatus = function() {
+        var thisBacklog = $scope.getSelectedBacklog();
 
-        if (backlog.finalVoteValue) {
-            console.log('emit save vote', backlog);
-            // TODO
+        if (thisBacklog) {
+            socket.emit('changeStatus', {
+                statusName: $scope.model.currentStatus.name,
+                backlogId: thisBacklog.assetId.split(':')[1]
+            });
         }
     };
-	
+
 	$scope.clearLog = function() {
 		
 		$scope.model.voteLog = [];
@@ -214,13 +234,9 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 				value = $scope.model.votes[vote];
 				
 				if (!finalVotes[value]) {
-					
 					finalVotes[value] = 1;
-					
 				} else {
-					
 					finalVotes[value] += 1;
-					
 				}
 			}
 		}
@@ -228,17 +244,11 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 		for (var est in finalVotes) {
 			
 			if (finalVotes.hasOwnProperty(est)) {
-				
 				if (finalVotes[est] === 1) {
-					
 					summary.push('1 person voted: ' + est);
-					
 				} else {
-					
 					summary.push(finalVotes[est] + ' people voted: ' + est);
-					
 				}
-				
 			}
 			
 		}
@@ -249,4 +259,16 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 		$scope.model.summaryText = summary;
 	};
 
+    $scope.getSelectedBacklog = function() {
+        var selectedBacklog;
+        if ($scope.model.preparedBacklogs) {
+            for (var i = 0; i < $scope.model.preparedBacklogs.length; i++) {
+                if ($scope.model.backlogNumber === $scope.model.preparedBacklogs[i].id) {
+                    selectedBacklog = $scope.model.preparedBacklogs[i];
+                    break;
+                }
+            }
+        }
+        return selectedBacklog;
+    };
 });
