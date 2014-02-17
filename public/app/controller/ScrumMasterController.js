@@ -109,9 +109,17 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
         if (changeStatusObj.success) {
             $scope.removeBacklog(changeStatusObj.backlogId);
         } else {
-            $scope.changeStatusError(changeStatusObj.backlogId);
+            $scope.showBacklogError(changeStatusObj.backlogId,
+                '<div class="alert alert-warning">An error occurred changing the status of this backlog</div>');
         }
     };
+
+    $scope.onBacklogReadyResponse = function(saveBacklogObj) {
+        if (!saveBacklogObj.success) {
+            $scope.showBacklogError(saveBacklogObj.backlogId,
+                '<div class="alert alert-warning">An error occurred updating this backlog</div>');
+        }
+    }
 
     //SOCKET EVENTS
     socket.on('connect', $scope.onConnect);
@@ -122,6 +130,7 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
     socket.on('backlogResponse', $scope.onBacklogResponse);
     socket.on('statusResponse', $scope.onStatusResponse);
     socket.on('changeStatusResponse', $scope.onChangeStatusResponse);
+    socket.on('backlogReadyResponse', $scope.onBacklogReadyResponse)
 
     /**
      * Remove all socket listeners on destroy
@@ -198,6 +207,8 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 
         thisBacklog = $scope.getSelectedBacklog();
         if (thisBacklog) {
+
+            //TODO: Set the final vote value on success...
             thisBacklog.finalVoteValue = $scope.model.finalVoteValue;
             socket.emit('backlogReadyRequest', {
                 backlogId: thisBacklog.assetId,
@@ -294,13 +305,12 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
         }
     };
 
-    $scope.changeStatusError = function(backlogId) {
-        var errorMsg = '<div class="alert alert-warning">An error occurred changing the status of this backlog</div>'
+    $scope.showBacklogError = function(backlogId, msg) {
 
         if ($scope.model.preparedBacklogs) {
             for (var i = 0; i < $scope.model.preparedBacklogs.length; i++) {
                 if (backlogId === $scope.model.preparedBacklogs[i].assetId) {
-                    $scope.model.preparedBacklogs[i].title += errorMsg;
+                    $scope.model.preparedBacklogs[i].title += msg;
                     break;
                 }
             }
