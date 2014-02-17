@@ -266,7 +266,18 @@ module.exports = (function() {
 
         socket.broadcast.to(socket.room).emit('changeStatus', data);
     };
-	
+
+    /**
+     * Response from the provider after attempting to change the status of a backlog
+     * @param data - an object with a backlog ID and a success property.
+     */
+    var changeStatusResponseEvent = function(data) {
+
+        var socket = this;
+
+        socket.broadcast.to(socket.room).emit('changeStatusResponse', data);
+    };
+
     /**
 	 * Mapping of event name to handlers
 	 */
@@ -304,7 +315,9 @@ module.exports = (function() {
 
         'statusResponse' : statusResponseEvent,
 
-        'changeStatus' : changeStatusEvent
+        'changeStatus' : changeStatusEvent,
+
+        'changeStatusResponse': changeStatusResponseEvent
 	};
 	
 	return {

@@ -104,6 +104,15 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
         }
     };
 
+    $scope.onChangeStatusResponse = function(changeStatusObj) {
+
+        if (changeStatusObj.success) {
+            $scope.removeBacklog(changeStatusObj.backlogId);
+        } else {
+            $scope.changeStatusError(changeStatusObj.backlogId);
+        }
+    };
+
     //SOCKET EVENTS
     socket.on('connect', $scope.onConnect);
     socket.on('login', $scope.onLogin);
@@ -112,6 +121,7 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
     socket.on('scopesResponse', $scope.onScopesResponse);
     socket.on('backlogResponse', $scope.onBacklogResponse);
     socket.on('statusResponse', $scope.onStatusResponse);
+    socket.on('changeStatusResponse', $scope.onChangeStatusResponse);
 
     /**
      * Remove all socket listeners on destroy
@@ -190,7 +200,7 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
         if (thisBacklog) {
             thisBacklog.finalVoteValue = $scope.model.finalVoteValue;
             socket.emit('backlogReadyRequest', {
-                backlogId: thisBacklog.assetId.split(':')[1],
+                backlogId: thisBacklog.assetId,
                 estimate: $scope.model.finalVoteValue,
                 status: 'Sprint Ready' // TODO: really?
             });
@@ -208,7 +218,7 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
         if (thisBacklog) {
             socket.emit('changeStatus', {
                 statusName: $scope.model.currentStatus.name,
-                backlogId: thisBacklog.assetId.split(':')[1]
+                backlogId: thisBacklog.assetId
             });
         }
     };
@@ -270,5 +280,30 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
             }
         }
         return selectedBacklog;
+    };
+
+    $scope.removeBacklog = function(backlogId) {
+
+        if ($scope.model.preparedBacklogs) {
+            for (var i = 0; i < $scope.model.preparedBacklogs.length; i++) {
+                if (backlogId === $scope.model.preparedBacklogs[i].assetId) {
+                    $scope.model.preparedBacklogs.splice(i, 1);
+                    break;
+                }
+            }
+        }
+    };
+
+    $scope.changeStatusError = function(backlogId) {
+        var errorMsg = '<div class="alert alert-warning">An error occurred changing the status of this backlog</div>'
+
+        if ($scope.model.preparedBacklogs) {
+            for (var i = 0; i < $scope.model.preparedBacklogs.length; i++) {
+                if (backlogId === $scope.model.preparedBacklogs[i].assetId) {
+                    $scope.model.preparedBacklogs[i].title += errorMsg;
+                    break;
+                }
+            }
+        }
     };
 });
