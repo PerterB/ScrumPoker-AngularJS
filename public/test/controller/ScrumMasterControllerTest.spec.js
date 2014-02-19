@@ -69,6 +69,15 @@ describe('ScrumMasterController Tests', function() {
         expect(socket.emit).toHaveBeenCalledWith('scopesRequest');
     });
 
+    it('should request a list of statuses on connect', function() {
+
+        window.location.pathname = '/some/room';
+
+        scope.onConnect();
+
+        expect(socket.emit).toHaveBeenCalledWith('statusRequest');
+    });
+
     it('should update the list of users when someone logs in', function() {
 
         scope.model.loggedInUsers = [];
@@ -100,6 +109,16 @@ describe('ScrumMasterController Tests', function() {
         scope.onVote();
 
         expect(scope.model.disableReveal).toEqual(false);
+    });
+
+    it('should receive backlogs from a provider', function() {
+
+        var backlogs = ['B-1234', 'B-4321'];
+
+        scope.onBacklogResponse(backlogs);
+
+        expect(scope.model.preparedBacklogs).toEqual(backlogs);
+        expect(scope.model.simpleMode).toEqual(false);
     });
 
     it('should receive scopes from a provider', function() {
@@ -177,14 +196,55 @@ describe('ScrumMasterController Tests', function() {
         expect(socket.emit).not.toHaveBeenCalledWith('backlogRequest', 'currentScope');
     });
 
-    it('should receive backlogs from a provider', function() {
+    it('should receive statuses from the provider', function() {
 
-        var backlogs = ['B-1234', 'B-4321'];
+        var expectedStatus = {status:123};
+        scope.model.statuses = undefined;
 
-        scope.onBacklogResponse(backlogs);
+        scope.onStatusResponse(expectedStatus);
 
-        expect(scope.model.preparedBacklogs).toEqual(backlogs);
-        expect(scope.model.simpleMode).toEqual(false);
+        expect(scope.model.statuses).toEqual(expectedStatus);
+
+    });
+
+    it('should not overwrite null statuses from the provider', function() {
+
+        scope.model.statuses = undefined;
+
+        scope.onStatusResponse(null);
+
+        expect(scope.model.statuses).toBeFalsy();
+
+    });
+
+    it('should remove backlogs from the list when a status is successfully changed', function() {
+
+        scope.model.preparedBacklogs = [{assetId:123}, {assetId:456}];
+
+        scope.onChangeStatusResponse({success:true, backlogId:123});
+
+        expect(scope.model.preparedBacklogs).toEqual([{assetId:456}]);
+
+    });
+
+    it('should set and error message when a status is not successfully changed', function() {
+
+        scope.model.preparedBacklogs = [{assetId:123, title: 'Test'}];
+
+        scope.onChangeStatusResponse({success:false, backlogId:123});
+
+        expect(scope.model.preparedBacklogs[0].title).toEqual('Test<div class="alert alert-warning">An error occurred changing the status of this backlog</div>');
+
+    });
+
+    it ('should display an error if a backlog is not successfully updated after the final vote', function() {
+
+        scope.model.preparedBacklogs = [{assetId:123, title: 'Test'}];
+
+        scope.onBacklogReadyResponse({success:false, backlogId:123});
+
+        expect(scope.model.preparedBacklogs[0].title).toEqual('Test<div class="alert alert-warning">An error occurred updating this backlog</div>');
+
     });
 
     it('should begin a vote', function() {
@@ -198,7 +258,6 @@ describe('ScrumMasterController Tests', function() {
         expect(scope.model.currentBacklog).toEqual('B-1234');
         expectReset();
     });
-
 
     it('should reset', function() {
 
