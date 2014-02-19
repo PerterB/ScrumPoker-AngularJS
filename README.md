@@ -1,8 +1,11 @@
 ScrumPoker
 ==========
 
-Node.js app for distributed Scrum Poker sessions. Scrum Master can begin the vote at which point team members can cast their votes.
-Votes remain hidden until the scrum master reveals the results.
+This is a small application that allows distributed agile teams to play planning poker remotely.
+
+The Scrum Master can initiate voting on a Backlog or Story, meanwhile each member can vote on the current item. When all votes are in the Scrum Master can reveal the votes and log a final vote value.
+
+All communication occurs in real time using socket.io
 
 Demo
 ----
