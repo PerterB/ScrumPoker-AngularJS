@@ -45,4 +45,6 @@ From the public/scripts directory run
 
     ./test.sh
 
-
+Screenshot
+----------
+![](http://planningpoker.io/images/results.png)
