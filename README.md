@@ -9,6 +9,9 @@ Demo
 Create a voting room at: http://planningpoker.io
 Invite voters to the url provided on the scrum master page.
 
+For a demo running with a Backlog Provider (with mock data) go to http://planningpoker.io/scrummaster/TeamRoom
+A VersionOne backlog provider is available here https://github.com/PerterB/VersionOneBacklogProvider
+
 
 Setup
 -----
