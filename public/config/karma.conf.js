@@ -8,6 +8,7 @@ module.exports = function(config){
         files : [
             'lib/angular/angular.min.js',
             'lib/angular/angular-sanitize.min.js',
+            'lib/angular/angular.audio.min.js',
             'test/lib/angular/angular-mocks.js',
             'app/**/*.js',
             'test/**/*.js'
