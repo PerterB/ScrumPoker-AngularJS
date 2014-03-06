@@ -4,6 +4,7 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 
     $scope.playlist = [{ src: '/assets/Countdown.mp3', type: 'audio/mp3' }];
 
+    $scope.countdown = false;
 
 
     $scope.init = function(loggedInUsers) {
@@ -160,7 +161,13 @@ PlanningApp.app.controller('ScrumMasterController', function ($scope, $window, s
 
         // backlogNumber is either coming from the input element or is set in beginBacklogVote
         $scope.model.currentBacklog = $scope.model.backlogNumber;
-		socket.emit('beginVote', backlog || $scope.model.backlogNumber, $scope.model.defaultVotingOption.values);
+        backlog = backlog || $scope.model.backlogNumber;
+
+		socket.emit('beginVote', {
+            backlog: backlog,
+            options: $scope.model.defaultVotingOption.values,
+            countdown: $scope.countdown
+        });
 
         if ($scope.countdown) {
             $scope.player.play(0);

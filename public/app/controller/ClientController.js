@@ -1,9 +1,14 @@
-PlanningApp.app.controller('ClientController', function ($scope, $window, socket, ClientModel, VotingModel) {
+PlanningApp.app.controller('ClientController', function ($scope, $window, socket, ClientModel, VotingModel, $interval) {
 
     $scope.model = ClientModel;
 
     $scope.votingModel = VotingModel;
 
+
+    /*
+     * Countdown vars
+     */
+    $scope.countdownProgress = 0;
 
     $scope.init = function(loggedInUsers) {
 
@@ -27,18 +32,10 @@ PlanningApp.app.controller('ClientController', function ($scope, $window, socket
      * onLogin
      *
      * When a user logs in, add their name to the list of users
-     * @param rm room name
      * @param username name of the user who has just logged in
      */
     $scope.onLogin = function(username) {
         $scope.votingModel.loggedInUsers.push(username);
-
-//        // call logoff on unload
-//        window.onbeforeunload = (function(name) {
-//            return function() {
-//                socket.emit('logoff', name);
-//            }
-//        })(username);
     };
 
     /**
@@ -59,21 +56,33 @@ PlanningApp.app.controller('ClientController', function ($scope, $window, socket
      *
      * @param backlogNumber
      */
-    $scope.onBeginVote = function(backlog, votingOptions) {
+    $scope.onBeginVote = function(backlogData) {
 
-        if (backlog.id) {
-            $scope.model.backlogNumber = backlog.id;
-            $scope.model.backlogDetails = backlog;
+        if (backlogData.backlog.id) {
+            $scope.model.backlogNumber = backlogData.backlog.id;
+            $scope.model.backlogDetails = backlogData.backlog;
             $scope.model.showCurrentVote = false;
         } else {
-            $scope.model.backlogNumber = backlog;
-            $scope.model.currentVote = backlog;
+            $scope.model.backlogNumber = backlogData.backlog;
+            $scope.model.currentVote = backlogData.backlog;
             $scope.model.backlogDetails = undefined;
             $scope.model.showCurrentVote = true;
         }
         $scope.model.votingOpen = true;
         $scope.model.showVoteSentMessage = false;
         $scope.model.showSummary = false;
+
+        $scope.countdown = backlogData.countdown;
+        if ($scope.countdown) {
+            $scope.startCountdown();
+        }
+    };
+
+    $scope.startCountdown = function() {
+        $scope.countdownProgress = 0;
+        $interval(function() {
+            $scope.countdownProgress += 1;
+        }, 1000, 30);
     };
 
     /**

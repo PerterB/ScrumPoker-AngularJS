@@ -124,10 +124,10 @@ module.exports = (function() {
      * Fires the 'beginVote' event
      * This is listened for by each client
      */
-    var beginVoteEvent = function(voteSubject, votingOptions) {
+    var beginVoteEvent = function(voteSubject) {
     	
     	var socket = this;
-    	socket.broadcast.to(socket.room).emit('beginVote', voteSubject, votingOptions);
+    	socket.broadcast.to(socket.room).emit('beginVote', voteSubject);
     	
     };
     
