@@ -58,9 +58,13 @@
         <button class="btn btn-default" data-ng-click="revealVotes()"
                 data-ng-disabled="model.disableReveal">Reveal Votes
         </button>
-
-
     </p>
+
+    <div class="progress progress-striped active" ng-show="audio1.playing">
+        <div class="progress-bar" role="progressbar" aria-valuenow="{{player.position}}" aria-valuemin="0" aria-valuemax="30" style="width: {{(player.position / 30) * 100}}%;">
+            {{player.position|number:0}} / 30
+        </div>
+    </div>
 
     <br/>
     <div class="panel panel-default" data-ng-hide="model.hideSummary">
@@ -156,6 +160,11 @@
         <h3 class="text-muted">Options</h3>
         <label>Invite Users to the following URL:</label>
         <input type="text" class="form-control" value="{{votingUrl}}" readonly/>
+        <div class="checkbox">
+            <label>
+                <input data-ng-model="countdown" type="checkbox"> Countdown
+            </label>
+        </div>
     </div>
     <br/>
 
@@ -233,6 +242,9 @@
         </div>
     </div>
 
+    <audio data-player-control="audio1" data-playlist="playlist" audio-player>
+    </audio>
+
 </div>
 
 
@@ -241,12 +253,14 @@
 <script type="text/javascript" src="/lib/bootstrap/js/bootstrap.js"></script>
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <script src="/lib/angular/angular.min.js"></script>
-<script type="text/javascript" src="/lib/angular/angular-sanitize.min.js"></script>
+<script src="/lib/angular/angular-sanitize.min.js"></script>
+<script src="/lib/angular/angular.audio.min.js"></script>
 <script src="/app/PlanningApp.js"></script>
 <script src="/app/directives/modalDirectives.js"></script>
 <script src="/app/factory/socket.js"></script>
 <script src="/app/factory/VotingModel.js"></script>
 <script src="/app/controller/ScrumMasterController.js"></script>
 <script src="/app/controller/VotersController.js"></script>
+
 </body>
 </html>

@@ -123,7 +123,7 @@ PlanningApp.app.controller('ClientController', function ($scope, $window, socket
      */
     $scope.login = function() {
 
-        if ($scope.model.username !== '') {
+        if ($scope.model.username) {
 
             if ($scope.votingModel.loggedInUsers.indexOf($scope.model.username) === -1) {
                 socket.emit('login', $scope.model.username);
