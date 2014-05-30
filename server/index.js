@@ -1,6 +1,5 @@
 var express = require('express'), 
 	app = express(),
-    jade = require('jade'),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server),
     socketEvents = require('./lib/socketEvents'),
